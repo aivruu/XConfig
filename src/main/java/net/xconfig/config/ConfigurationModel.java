@@ -4,6 +4,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Interface model for the manager.
+ *
+ * @author InitSync
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public interface ConfigurationModel {
 	/**
 	 * Returns a FileConfiguration object using the file specified.

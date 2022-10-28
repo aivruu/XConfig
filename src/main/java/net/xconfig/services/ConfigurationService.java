@@ -7,6 +7,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Interface to handle the instances creation.
+ *
+ * @author InitSync
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public interface ConfigurationService {
 	/**
 	 * Returns a new object of ManagerModel.

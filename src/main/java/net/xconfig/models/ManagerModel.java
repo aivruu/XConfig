@@ -16,6 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Class that handles internally the files creation.
+ *
+ * @author InitSync
+ * @version 1.0.0
+ * @since 1.0.0
+ * @see net.xconfig.config.ConfigurationModel
+ */
 public final class ManagerModel implements ConfigurationModel {
 	private final JavaPlugin plugin;
 	private final Map<String, File> files;

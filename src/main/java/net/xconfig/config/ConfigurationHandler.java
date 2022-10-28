@@ -8,6 +8,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/**
+ * Interface model that handles the configuration handler.
+ *
+ * @author InitSync
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 public interface ConfigurationHandler {
 	/**
 	 * Make some action with the files. Reload, Save or Write a new value.

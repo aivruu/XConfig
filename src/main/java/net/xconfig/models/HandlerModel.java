@@ -13,6 +13,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Class to handle the configuration files and get values from that files.
+ *
+ * @author InitSync
+ * @version 1.0.0
+ * @since 1.0.0
+ * @see net.xconfig.config.ConfigurationHandler
+ */
 public final class HandlerModel implements ConfigurationHandler {
 	private final ConfigurationModel configuration;
 	
