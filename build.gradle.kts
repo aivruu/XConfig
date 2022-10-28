@@ -13,13 +13,11 @@ val libs = property("libs") as String
 
 repositories {
 	maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-	maven("https://nexus.iridiumdevelopment.net/repository/maven-releases/")
 	mavenCentral()
 }
 
 dependencies {
 	compileOnly("org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT")
-	compileOnly("com.iridium:IridiumColorAPI:1.0.6")
 	
 	implementation("org.jetbrains:annotations:23.0.0")
 	implementation("commons-lang:commons-lang:2.6")
