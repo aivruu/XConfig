@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,7 +47,7 @@ public final class HandlerModel implements ConfigurationHandler {
 					case WRITE -> {
 						assert toPath != null;
 						this.configuration
-							 .configuration("config.yml")
+							 .file("config.yml")
 							 .set(toPath, object);
 					}
 				}
@@ -59,7 +60,7 @@ public final class HandlerModel implements ConfigurationHandler {
 					case WRITE -> {
 						assert toPath != null;
 						this.configuration
-							 .configuration(customFileName)
+							 .file(customFileName)
 							 .set(toPath, object);
 					}
 				}
@@ -84,10 +85,20 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(file, "The file type is null.");
 		Validate.notEmpty(path, "The path to get is empty.");
 		
-		return switch (file) {
-			case CONFIGURATION -> this.configuration.configuration("config.yml").getString(path);
-			case CUSTOM -> this.configuration.configuration(customFileName).getString(path);
-		};
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .getString(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .getString(path);
+			}
+		}
+		return "";
 	}
 	
 	/**
@@ -107,10 +118,20 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(file, "The file type is null.");
 		Validate.notEmpty(path, "The path to get is empty.");
 		
-		return switch (file) {
-			case CONFIGURATION -> this.configuration.configuration("config.yml").getInt(path);
-			case CUSTOM -> this.configuration.configuration(customFileName).getInt(path);
-		};
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .getInt(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .getInt(path);
+			}
+		}
+		return 0;
 	}
 	
 	/**
@@ -122,7 +143,7 @@ public final class HandlerModel implements ConfigurationHandler {
 	 * @return An object.
 	 */
 	@Override
-	public @NotNull Object any(
+	public @Nullable Object any(
 		 @NotNull File file,
 		 @NotNull String path,
 		 @Nullable String customFileName
@@ -130,10 +151,20 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(file, "The file type is null.");
 		Validate.notEmpty(path, "The path to get is empty.");
 		
-		return switch (file) {
-			case CONFIGURATION -> this.configuration.configuration("config.yml").get(path);
-			case CUSTOM -> this.configuration.configuration(customFileName).get(path);
-		};
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .get(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .get(path);
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -153,10 +184,20 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(file, "The file type is null.");
 		Validate.notEmpty(path, "The path to get is empty.");
 		
-		return switch (file) {
-			case CONFIGURATION -> this.configuration.configuration("config.yml").getList(path);
-			case CUSTOM -> this.configuration.configuration(customFileName).getList(path);
-		};
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .getList(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .getList(path);
+			}
+		}
+		return Collections.emptyList();
 	}
 	
 	/**
@@ -176,10 +217,20 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(file, "The file type is null.");
 		Validate.notEmpty(path, "The path to get is empty.");
 		
-		return switch (file) {
-			case CONFIGURATION -> this.configuration.configuration("config.yml").getStringList(path);
-			case CUSTOM -> this.configuration.configuration(customFileName).getStringList(path);
-		};
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .getStringList(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .getStringList(path);
+			}
+		}
+		return Collections.emptyList();
 	}
 	
 	/**
@@ -191,7 +242,7 @@ public final class HandlerModel implements ConfigurationHandler {
 	 * @return A ConfigurationSection
 	 */
 	@Override
-	public @NotNull ConfigurationSection configSection(
+	public @Nullable ConfigurationSection configSection(
 		 @NotNull File file,
 		 @NotNull String path,
 		 @Nullable String customFileName
@@ -199,9 +250,19 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(file, "The file type is null.");
 		Validate.notEmpty(path, "The path to get is empty.");
 		
-		return switch (file) {
-			case CONFIGURATION -> this.configuration.configuration("config.yml").getConfigurationSection(path);
-			case CUSTOM -> this.configuration.configuration(customFileName).getConfigurationSection(path);
-		};
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .getConfigurationSection(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .getConfigurationSection(path);
+			}
+		}
+		return null;
 	}
 }

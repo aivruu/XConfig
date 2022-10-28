@@ -53,7 +53,7 @@ public interface ConfigurationHandler {
 	 * @param customFileName Name of the custom file.
 	 * @return An object.
 	 */
-	@NotNull Object any(@NotNull File file, @NotNull String path, @Nullable String customFileName);
+	@Nullable Object any(@NotNull File file, @NotNull String path, @Nullable String customFileName);
 	
 	/**
 	 * Returns a list.
@@ -87,7 +87,7 @@ public interface ConfigurationHandler {
 	 * @param customFileName Name of the custom file.
 	 * @return A ConfigurationSection
 	 */
-	@NotNull ConfigurationSection configSection(
+	@Nullable ConfigurationSection configSection(
 		 @NotNull File file,
 		 @NotNull String path,
 		 @Nullable String customFileName
