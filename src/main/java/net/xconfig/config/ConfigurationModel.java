@@ -11,7 +11,7 @@ public interface ConfigurationModel {
 	 * @param fileName Name of file.
 	 * @return A FileConfiguration.
 	 */
-	@Nullable FileConfiguration get(@NotNull String fileName);
+	@Nullable FileConfiguration file(@NotNull String fileName);
 	
 	/**
 	 * Creates a new file with a folder.

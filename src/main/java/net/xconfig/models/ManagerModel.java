@@ -34,7 +34,7 @@ public final class ManagerModel implements ConfigurationModel {
 	 * @return A FileConfiguration.
 	 */
 	@Override
-	public @Nullable FileConfiguration get(@NotNull String fileName) {
+	public @Nullable FileConfiguration file(@NotNull String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		if (!this.configurations.containsKey(fileName)) {
