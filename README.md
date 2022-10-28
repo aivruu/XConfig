@@ -72,3 +72,18 @@ Do you want contribute with the library?
 
 * [Make a Pull Request](https://github.com/InitSync/XConfig/compare)
 * [Issues](https://github.com/InitSync/XConfig/issues/new)
+
+# ✅ | Build
+If you want build the project locally, download it, you must be had Gradle and Java 8+ for this.
+
+Now for build the project
+```
+git clone https://github.com/InitSync/XConfig
+cd XConfig
+./gradlew clean shadowJar
+```
+
+The file will be at ```bin/XConfig-release.jar```.
+
+# 🎫 | License
+This project is licensed under the GNU General Public License v3.0 license, for more details see the file [License](LICENSE)
