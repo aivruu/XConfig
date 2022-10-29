@@ -58,9 +58,9 @@ Maven
   <configuration>
     <relocations>
       <relocation>
-        <pattern>fr.mrmicky.fastboard</pattern>
+        <pattern>net.xconfig</pattern>
         <!-- Relocates the library package into your project package. -->
-        <shadedPattern>com.yourpackage.fastboard</shadedPattern>
+        <shadedPattern>com.yourpackage.xconfig</shadedPattern>
       </relocation>
     </relocations>
   </configuration>
