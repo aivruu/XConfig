@@ -160,7 +160,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .get(path);
@@ -193,7 +193,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .getList(path);
@@ -226,7 +226,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .getStringList(path);
@@ -259,7 +259,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .getBoolean(path);
@@ -292,7 +292,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .getConfigurationSection(path);
