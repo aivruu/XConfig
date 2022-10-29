@@ -48,7 +48,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(action, "The action type is null.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				switch (action) {
 					case RELOAD -> this.configuration.reload("config.yml");
 					case SAVE -> this.configuration.save("config.yml");
@@ -94,7 +94,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .getString(path);
@@ -127,7 +127,7 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIGURATION -> {
+			case CONFIG -> {
 				return this.configuration
 					 .file("config.yml")
 					 .getInt(path);
@@ -239,6 +239,39 @@ public final class HandlerModel implements ConfigurationHandler {
 			}
 		}
 		return Collections.emptyList();
+	}
+	
+	/**
+	 * Returns a boolean.
+	 *
+	 * @param file File type.
+	 * @param path Path required.
+	 * @param customFileName Name of the custom file.
+	 * @return A boolean value.
+	 */
+	@Override
+	public boolean condition(
+		@NotNull File file,
+		@NotNull String path,
+		@Nullable String customFileName
+	) {
+		Objects.requireNonNull(file, "The file type is null.");
+		Validate.notEmpty(path, "The path to get is empty.");
+		
+		switch (file) {
+			case CONFIGURATION -> {
+				return this.configuration
+					 .file("config.yml")
+					 .getBoolean(path);
+			}
+			case CUSTOM -> {
+				assert customFileName != null && !customFileName.isEmpty();
+				this.configuration
+					 .file(customFileName)
+					 .getBoolean(path);
+			}
+		}
+		return false;
 	}
 	
 	/**
