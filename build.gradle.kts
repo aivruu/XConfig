@@ -1,7 +1,6 @@
 plugins {
 	id("com.github.johnrengelman.shadow") version("7.1.2")
 	`java-library`
-	`maven-publish`
 }
 
 val directory = property("group") as String
@@ -18,18 +17,6 @@ dependencies {
 	
 	implementation("org.jetbrains:annotations:23.0.0")
 	implementation("commons-lang:commons-lang:2.6")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = directory
-            artifactId = rootProject.name
-            version = release
-
-            from(components["java"])
-        }
-    }
 }
 
 tasks {
