@@ -1,4 +1,4 @@
-# ⚙️ | XConfig
+# ⚙️ | XConfig [![Codacy Badge](https://app.codacy.com/project/badge/Grade/05d1dab7b9f6420a917c5cf39f07a3da)](https://www.codacy.com/gh/InitSync/XConfig/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=InitSync/XConfig&amp;utm_campaign=Badge_Grade)
 XConfig is a Spigot Plugin Development library. Simple and easy to use allows you make configuration files for your Spigot/Paper plugins.
 
 # 🛠️ | Installation
@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-  implementation("com.github.InitSync:XConfig:LATEST")
+  implementation("com.github.InitSync:XConfig:-SNAPSHOT")
 }
 
 tasks {
@@ -38,7 +38,7 @@ Maven
   <dependency>
     <groupId>com.github.InitSync</groupId>
     <artifactId>XConfig</artifactId>
-    <version>LATEST</version>
+    <version>-SNAPSHOT</version>
     <scope>compile</scope>
   </dependency>
 </dependencies>
