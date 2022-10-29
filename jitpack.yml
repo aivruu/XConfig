@@ -1,2 +1,5 @@
 jdk:
   - openjdk8
+
+install:
+  - "bash gradlew build publishToMavenLocal"
