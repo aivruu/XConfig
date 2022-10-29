@@ -4,7 +4,6 @@ import net.xconfig.config.ConfigurationModel;
 import net.xconfig.models.HandlerModel;
 import net.xconfig.models.ManagerModel;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,23 +15,21 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface ConfigurationService {
 	/**
-	 * Returns a new object of ManagerModel.
+	 * Returns a new instance of ManagerModel.
 	 *
-	 * @param plugin A JavaPlugin instance required for the file creation.
+	 * @param plugin A JavaPlugin instance required for the files creation.
 	 * @return A ManagerModel instance.
 	 */
-	@Contract ("_ -> new")
 	static @NotNull ManagerModel manager(@NotNull JavaPlugin plugin) {
 		return new ManagerModel(plugin);
 	}
 	
 	/**
-	 * Returns a new instance of HandlerModel.
+	 * Returns a new instance of ManagerModel.
 	 *
-	 * @param model A ConfigurationModel object required to manage the values into the methods class.
-	 * @return A HandlerModel object.
+	 * @param model A ConfigurationModel instance.
+	 * @return A ManagerModel instance.
 	 */
-	@Contract (value = "_ -> new", pure = true)
 	static @NotNull HandlerModel handler(@NotNull ConfigurationModel model) {
 		return new HandlerModel(model);
 	}

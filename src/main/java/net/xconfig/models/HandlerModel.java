@@ -48,31 +48,39 @@ public final class HandlerModel implements ConfigurationHandler {
 		Objects.requireNonNull(action, "The action type is null.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				switch (action) {
-					case RELOAD -> this.configuration.reload("config.yml");
-					case SAVE -> this.configuration.save("config.yml");
-					case WRITE -> {
+					case RELOAD:
+						this.configuration.reload("config.yml");
+						break;
+					case SAVE:
+						this.configuration.save("config.yml");
+						break;
+					case WRITE:
 						assert toPath != null;
 						this.configuration
 							 .file("config.yml")
 							 .set(toPath, object);
-					}
+						break;
 				}
-			}
-			case CUSTOM -> {
+				break;
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
 				switch (action) {
-					case RELOAD -> this.configuration.reload(customFileName);
-					case SAVE -> this.configuration.save(customFileName);
-					case WRITE -> {
+					case RELOAD:
+						this.configuration.reload(customFileName);
+						break;
+					case SAVE:
+						this.configuration.save(customFileName);
+						break;
+					case WRITE:
 						assert toPath != null;
 						this.configuration
 							 .file(customFileName)
 							 .set(toPath, object);
-					}
+						break;
 				}
-			}
+				break;
 		}
 	}
 	
@@ -94,17 +102,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .getString(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .getString(path);
-			}
 		}
 		return "";
 	}
@@ -127,17 +133,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .getInt(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .getInt(path);
-			}
 		}
 		return 0;
 	}
@@ -160,17 +164,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .get(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .get(path);
-			}
 		}
 		return null;
 	}
@@ -193,17 +195,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .getList(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .getList(path);
-			}
 		}
 		return Collections.emptyList();
 	}
@@ -226,17 +226,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .getStringList(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .getStringList(path);
-			}
 		}
 		return Collections.emptyList();
 	}
@@ -259,17 +257,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .getBoolean(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .getBoolean(path);
-			}
 		}
 		return false;
 	}
@@ -292,17 +288,15 @@ public final class HandlerModel implements ConfigurationHandler {
 		Validate.notEmpty(path, "The path to get is empty.");
 		
 		switch (file) {
-			case CONFIG -> {
+			case CONFIG:
 				return this.configuration
 					 .file("config.yml")
 					 .getConfigurationSection(path);
-			}
-			case CUSTOM -> {
+			case CUSTOM:
 				assert customFileName != null && !customFileName.isEmpty();
-				this.configuration
+				return this.configuration
 					 .file(customFileName)
 					 .getConfigurationSection(path);
-			}
 		}
 		return null;
 	}
