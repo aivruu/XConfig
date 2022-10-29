@@ -8,5 +8,5 @@ package net.xconfig.enums;
  * @since 1.0.0
  */
 public enum File {
-	CONFIGURATION, CUSTOM
+	CONFIG, CUSTOM
 }
