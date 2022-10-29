@@ -87,6 +87,20 @@ public interface ConfigurationHandler {
 	);
 	
 	/**
+	 * Returns a boolean.
+	 *
+	 * @param file File type.
+	 * @param path Path required.
+	 * @param customFileName Name of the custom file.
+	 * @return A boolean value.
+	 */
+	boolean condition(
+		@NotNull File file,
+		@NotNull String path,
+		@Nullable String customFileName
+	);
+	
+	/**
 	 * Returns a ConfigurationSection object.
 	 *
 	 * @param file File type.
