@@ -51,7 +51,7 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 			case CONFIG:
 				switch (action) {
 					case RELOAD:
-						this.configuration.reload("config.yml");
+						this.configuration.load("config.yml");
 						break;
 					case SAVE:
 						this.configuration.save("config.yml");
@@ -68,7 +68,7 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 				assert customFileName != null && !customFileName.isEmpty();
 				switch (action) {
 					case RELOAD:
-						this.configuration.reload(customFileName);
+						this.configuration.load(customFileName);
 						break;
 					case SAVE:
 						this.configuration.save(customFileName);
