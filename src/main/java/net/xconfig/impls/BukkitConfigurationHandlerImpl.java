@@ -1,4 +1,4 @@
-package net.xconfig.models;
+package net.xconfig.impls;
 
 import net.xconfig.config.ConfigurationHandler;
 import net.xconfig.config.ConfigurationModel;
@@ -21,10 +21,10 @@ import java.util.Objects;
  * @since 1.0.0
  * @see net.xconfig.config.ConfigurationHandler
  */
-public final class HandlerModel implements ConfigurationHandler {
+public final class BukkitConfigurationHandlerImpl implements ConfigurationHandler {
 	private final ConfigurationModel configuration;
 	
-	public HandlerModel(@NotNull ConfigurationModel configuration) {
+	public BukkitConfigurationHandlerImpl(@NotNull ConfigurationModel configuration) {
 		this.configuration = Objects.requireNonNull(configuration, "The ConfigurationModel object is null.");
 	}
 	

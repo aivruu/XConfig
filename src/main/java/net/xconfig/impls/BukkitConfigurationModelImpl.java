@@ -1,4 +1,4 @@
-package net.xconfig.models;
+package net.xconfig.impls;
 
 import net.xconfig.config.ConfigurationModel;
 import org.apache.commons.lang.Validate;
@@ -24,12 +24,12 @@ import java.util.Objects;
  * @since 1.0.0
  * @see net.xconfig.config.ConfigurationModel
  */
-public final class ManagerModel implements ConfigurationModel {
+public final class BukkitConfigurationModelImpl implements ConfigurationModel {
 	private final JavaPlugin plugin;
 	private final Map<String, File> files;
 	private final Map<String, FileConfiguration> configurations;
 	
-	public ManagerModel(@NotNull JavaPlugin plugin) {
+	public BukkitConfigurationModelImpl(@NotNull JavaPlugin plugin) {
 		this.plugin = Objects.requireNonNull(plugin, "The plugin instance is null.");
 		this.files = new HashMap<>();
 		this.configurations = new HashMap<>();
