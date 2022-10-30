@@ -63,7 +63,7 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	public void create(@NotNull String folderName, @NotNull String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		if (this.files.containsKey(fileName) && this.configurations.containsKey(fileName)) {
+		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
 			File file;
 			if (folderName.isEmpty()) {
 				file = new File(this.plugin.getDataFolder(), fileName);
