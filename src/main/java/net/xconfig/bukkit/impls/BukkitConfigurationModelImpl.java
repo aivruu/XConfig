@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -85,6 +86,17 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	}
 	
 	/**
+	 * Creates multiple files.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param files Names of the files.
+	 */
+	@Override
+	public void create(@NotNull String folderName, @NotNull String... files) {
+		Arrays.asList(files).forEach(this::create);
+	}
+	
+	/**
 	 * Loads an existing file.
 	 *
 	 * @param fileName Name of file.
@@ -99,6 +111,16 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 		}
 		
 		YamlConfiguration.loadConfiguration(this.files.get(fileName));
+	}
+	
+	/**
+	 * Loads various existing files.
+	 *
+	 * @param files Names of the files.
+	 */
+	@Override
+	public void load(@NotNull String... files) {
+		Arrays.asList(files).forEach(this::load);
 	}
 	
 	/**

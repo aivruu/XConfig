@@ -30,11 +30,26 @@ public interface BungeeConfigurationModel {
 	void create(@NotNull String folderName, @NotNull String fileName);
 	
 	/**
+	 * Creates multiple files.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param files Names of the files.
+	 */
+	void create(@NotNull String folderName, @NotNull String... files);
+	
+	/**
 	 * Loads an existing file.
 	 *
 	 * @param fileName Name of file.
 	 */
 	void load(@NotNull String fileName);
+	
+	/**
+	 * Loads various existing files.
+	 *
+	 * @param files Names of the files.
+	 */
+	void load(@NotNull String... files);
 	
 	/**
 	 * Saves an existing file.

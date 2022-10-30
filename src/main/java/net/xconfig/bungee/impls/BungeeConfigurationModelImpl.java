@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -117,6 +118,17 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	}
 	
 	/**
+	 * Creates multiple files.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param files Names of the files.
+	 */
+	@Override
+	public void create(@NotNull String folderName, @NotNull String... files) {
+		Arrays.asList(files).forEach(this::create);
+	}
+	
+	/**
 	 * Loads an existing file.
 	 *
 	 * @param fileName Name of file.
@@ -140,6 +152,16 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 				 .severe("Cannot load the file " + fileName + ".");
 			exception.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Loads various existing files.
+	 *
+	 * @param files Names of the files.
+	 */
+	@Override
+	public void load(@NotNull String... files) {
+		Arrays.asList(files).forEach(this::load);
 	}
 	
 	/**
