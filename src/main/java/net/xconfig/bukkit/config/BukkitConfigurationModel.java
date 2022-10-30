@@ -1,17 +1,17 @@
-package net.xconfig.config;
+package net.xconfig.bukkit.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Interface model for the manager.
+ * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
-public interface ConfigurationModel {
+public interface BukkitConfigurationModel {
 	/**
 	 * Returns a FileConfiguration object using the file specified.
 	 *

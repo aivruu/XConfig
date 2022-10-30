@@ -1,4 +1,4 @@
-package net.xconfig.config;
+package net.xconfig.bukkit.config;
 
 import net.xconfig.enums.Action;
 import net.xconfig.enums.File;
@@ -9,13 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * Interface model that handles the configuration handler.
+ * Interface model that handles the configuration handler for Bukkit.
  *
  * @author InitSync
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
-public interface ConfigurationHandler {
+public interface BukkitConfigurationHandler {
 	/**
 	 * Make some action with the files. Reload, Save or Write a new value.
 	 *

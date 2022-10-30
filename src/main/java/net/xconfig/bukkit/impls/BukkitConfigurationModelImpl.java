@@ -1,6 +1,6 @@
-package net.xconfig.impls;
+package net.xconfig.bukkit.impls;
 
-import net.xconfig.config.ConfigurationModel;
+import net.xconfig.bukkit.config.BukkitConfigurationModel;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -20,11 +20,11 @@ import java.util.Objects;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
- * @see net.xconfig.config.ConfigurationModel
+ * @see BukkitConfigurationModel
  */
-public final class BukkitConfigurationModelImpl implements ConfigurationModel {
+public final class BukkitConfigurationModelImpl implements BukkitConfigurationModel {
 	private final JavaPlugin plugin;
 	private final Map<String, File> files;
 	private final Map<String, FileConfiguration> configurations;

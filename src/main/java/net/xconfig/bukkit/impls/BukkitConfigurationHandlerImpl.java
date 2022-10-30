@@ -1,7 +1,7 @@
-package net.xconfig.impls;
+package net.xconfig.bukkit.impls;
 
-import net.xconfig.config.ConfigurationHandler;
-import net.xconfig.config.ConfigurationModel;
+import net.xconfig.bukkit.config.BukkitConfigurationHandler;
+import net.xconfig.bukkit.config.BukkitConfigurationModel;
 import net.xconfig.enums.Action;
 import net.xconfig.enums.File;
 import org.apache.commons.lang.Validate;
@@ -17,14 +17,14 @@ import java.util.Objects;
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
- * @see net.xconfig.config.ConfigurationHandler
+ * @see net.xconfig.bukkit.config.BukkitConfigurationHandler
  */
-public final class BukkitConfigurationHandlerImpl implements ConfigurationHandler {
-	private final ConfigurationModel configuration;
+public final class BukkitConfigurationHandlerImpl implements BukkitConfigurationHandler {
+	private final BukkitConfigurationModel configuration;
 	
-	public BukkitConfigurationHandlerImpl(@NotNull ConfigurationModel configuration) {
+	public BukkitConfigurationHandlerImpl(@NotNull BukkitConfigurationModel configuration) {
 		this.configuration = Objects.requireNonNull(configuration, "The ConfigurationModel object is null.");
 	}
 	
