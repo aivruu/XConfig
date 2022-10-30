@@ -37,13 +37,6 @@ public interface BungeeConfigurationModel {
 	void load(@NotNull String fileName);
 	
 	/**
-	 * Reloads a file.
-	 *
-	 * @param fileName Name of file.
-	 */
-	void reload(@NotNull String fileName);
-	
-	/**
 	 * Saves an existing file.
 	 *
 	 * @param fileName Name of file.
