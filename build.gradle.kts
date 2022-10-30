@@ -22,7 +22,7 @@ dependencies {
 
 publishing {
 	publications {
-		create<MavenPublication>("mavenJava") {
+		create<MavenPublication>("maven") {
 			groupId = "net.xconfig"
 			artifactId = "XConfig"
 			version = release
