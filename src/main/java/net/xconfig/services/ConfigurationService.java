@@ -1,9 +1,10 @@
 package net.xconfig.services;
 
 import net.xconfig.config.ConfigurationModel;
-import net.xconfig.models.HandlerModel;
-import net.xconfig.models.ManagerModel;
+import net.xconfig.impls.BukkitConfigurationHandlerImpl;
+import net.xconfig.impls.BukkitConfigurationModelImpl;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -20,8 +21,9 @@ public interface ConfigurationService {
 	 * @param plugin A JavaPlugin instance required for the files creation.
 	 * @return A ManagerModel instance.
 	 */
-	static @NotNull ManagerModel manager(@NotNull JavaPlugin plugin) {
-		return new ManagerModel(plugin);
+	@Contract ("_ -> new")
+	static @NotNull BukkitConfigurationModelImpl bukkitManager(@NotNull JavaPlugin plugin) {
+		return new BukkitConfigurationModelImpl(plugin);
 	}
 	
 	/**
@@ -30,7 +32,8 @@ public interface ConfigurationService {
 	 * @param model A ConfigurationModel instance.
 	 * @return A ManagerModel instance.
 	 */
-	static @NotNull HandlerModel handler(@NotNull ConfigurationModel model) {
-		return new HandlerModel(model);
+	@Contract (value = "_ -> new", pure = true)
+	static @NotNull BukkitConfigurationHandlerImpl bukkitHandler(@NotNull ConfigurationModel model) {
+		return new BukkitConfigurationHandlerImpl(model);
 	}
 }
