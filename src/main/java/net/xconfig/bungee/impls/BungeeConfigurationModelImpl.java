@@ -2,16 +2,30 @@ package net.xconfig.bungee.impls;
 
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 import net.xconfig.bungee.config.BungeeConfigurationModel;
 import org.apache.commons.lang.Validate;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Implementation that manages the creation of the files.
+ *
+ * @author InitSync
+ * @version 1.0.1
+ * @since 1.0.1
+ * @see net.xconfig.bungee.config.BungeeConfigurationModel
+ */
 public final class BungeeConfigurationModelImpl implements BungeeConfigurationModel {
 	private final Plugin plugin;
 	private final Map<String, File> files;
@@ -55,9 +69,50 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			try {
-				
+			File file;
+			InputStream stream = null;
+			
+			if (folderName.isEmpty()) {
+				file = new File(this.plugin.getDataFolder(), fileName);
+				if (!file.exists()) {
+					stream = this.plugin
+						 .getClass()
+						 .getClassLoader()
+						 .getResourceAsStream(fileName);
+				}
+			} else {
+				file = new File(
+					 this.plugin.getDataFolder()
+					 + File.separator
+					 + folderName
+					 + File.separator,
+					 fileName);
+				if (!file.exists()) {
+					stream = this.plugin.getClass()
+						 .getClassLoader()
+						 .getResourceAsStream(
+								this.plugin.getDataFolder()
+								+ File.separator
+								+ folderName
+								+ File.separator
+								+ folderName
+							  + file);
+				}
 			}
+			
+			if (stream == null) {
+				this.plugin
+					 .getLogger()
+					 .severe("Internal file " + fileName + " can't be found.");
+				return;
+			}
+			
+			try {
+				Files.copy(stream, file.toPath());
+				this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file));
+			} catch (Exception ignored) {}
+			
+			this.files.put(fileName, file);
 		}
 	}
 	
@@ -68,17 +123,23 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 */
 	@Override
 	public void load(@NotNull String fileName) {
-	
-	}
-	
-	/**
-	 * Reloads a file.
-	 *
-	 * @param fileName Name of file.
-	 */
-	@Override
-	public void reload(@NotNull String fileName) {
-	
+		Validate.notEmpty(fileName, "The file name is empty.");
+		
+		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
+			this.plugin
+				 .getLogger()
+				 .severe("Cannot load the file " + fileName + " because doesn't exist.");
+			return;
+		}
+		
+		try {
+			ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.files.get(fileName));
+		} catch (IOException exception) {
+			this.plugin
+				 .getLogger()
+				 .severe("Cannot load the file " + fileName + ".");
+			exception.printStackTrace();
+		}
 	}
 	
 	/**
@@ -90,142 +151,24 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	public void save(@NotNull String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		if (this.fileMap.containsKey(file) && this.configurationMap.containsKey(file)) {
-			try {
-				ConfigurationProvider.getProvider(YamlConfiguration.class)
-					 .save(
-							this.configurationMap.get(file),
-							this.fileMap.get(file)
-					 );
-			} catch (IOException exception) {
-				LogPrinter.error("&b[BetterAquatic] ",
-					 "&cThe API has trowed an error.",
-					 "&cCannot save the file: '" + file + "'."
-				);
-				
-				exception.printStackTrace();
-			}
-			return;
-		}
-	}
-	
-	@Override
-	public void save(@NotNull String folderName, @NotNull String fileName) {}
-	
-	@Override
-	public void create(@NotNull String folder, @NotNull String file) {
-		Validate.notEmpty(file, "The file name is empty.");
-		
-		if (!this.fileMap.containsKey(file) && !this.configurationMap.containsKey(file)) {
-			File ioFile;
-			InputStream stream = null;
-			
-			try {
-				if (folder.isEmpty()) {
-					ioFile = new File(this.plugin.getDataFolder(), file);
-					if (!ioFile.exists()) {
-						stream = this.plugin
-							 .getClass()
-							 .getClassLoader()
-							 .getResourceAsStream(file);
-					}
-				} else {
-					ioFile = new File(
-						 this.plugin.getDataFolder()
-								+ File.separator
-								+ folder
-								+ File.separator,
-						 file
-					);
-					if (!ioFile.exists()) {
-						stream = this.plugin.getClass()
-							 .getClassLoader()
-							 .getResourceAsStream(this.plugin.getDataFolder()
-									+ File.separator
-									+ folder
-									+ File.separator
-									+ folder + file
-							 );
-					}
-				}
-				
-				if (stream == null) {
-					LogPrinter.error("&b[BetterAquatic] ",
-						 "The configuration file isn't in the plugin jar file."
-					);
-					return;
-				}
-				
-				Files.copy(stream, ioFile.toPath());
-				
-				this.fileMap.put(file, ioFile);
-				this.configurationMap.put(file, ConfigurationProvider.getProvider(YamlConfiguration.class).load(ioFile));
-			} catch (Exception ignored) {}
-		}
-	}
-	
-	@Override
-	public void load(@NotNull String file) {
-		Validate.notEmpty(file, "The file name is empty.");
-		
-		if (!this.fileMap.containsKey(file) && !this.configurationMap.containsKey(file)) {
-			LogPrinter.error("&b[BetterAquatic] ", "&cThe file: '" + file + "' to load not exists.");
+		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
+			Bukkit.getLogger().severe("Cannot save the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
 		try {
-			ConfigurationProvider.getProvider(YamlConfiguration.class)
-				 .load(this.fileMap.get(file));
-		} catch (IOException exception) {
-			LogPrinter.error("&b[BetterAquatic] ",
-				 "&cThe API has trowed an error.",
-				 "&cCannot load the file: '" + file + "'."
+			ConfigurationProvider.getProvider(YamlConfiguration.class).save(
+				 this.configurations.get(fileName),
+				 this.files.get(fileName)
 			);
-			
+		} catch (IOException exception) {
+			this.plugin
+				 .getLogger()
+				 .severe("Failed to save the file" + fileName + ".");
 			exception.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void reload(@NotNull String file) {
-		if (this.fileMap.containsKey(file) && this.configurationMap.containsKey(file)) {
-			try {
-				ConfigurationProvider.getProvider(YamlConfiguration.class)
-					 .load(this.fileMap.get(file));
-			} catch (IOException exception) {
-				LogPrinter.error("&b[BetterAquatic] ",
-					 "&cThe API has trowed an error.",
-					 "&cCannot reload the file: '" + file + "'."
-				);
-				
-				exception.printStackTrace();
-			}
-			return;
-		}
-		
-		LogPrinter.error("&b[BetterAquatic] ", "&cThe file: &e'" + file + "' doesn't exist.");
-	}
-	
-	@Override
-	public void save(@NotNull String file) {
-		if (this.fileMap.containsKey(file) && this.configurationMap.containsKey(file)) {
-			try {
-				ConfigurationProvider.getProvider(YamlConfiguration.class)
-					 .save(
-							this.configurationMap.get(file),
-							this.fileMap.get(file)
-					 );
-			} catch (IOException exception) {
-				LogPrinter.error("&b[BetterAquatic] ",
-					 "&cThe API has trowed an error.",
-					 "&cCannot save the file: '" + file + "'."
-				);
-				
-				exception.printStackTrace();
-			}
-			return;
-		}
-		
-		LogPrinter.error("&b[BetterAquatic] ", "&cThe file: &e'" + file + "' doesn't exist.");
-	}
+	public void save(@NotNull String folderName, @NotNull String fileName) {}
 }
