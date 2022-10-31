@@ -93,7 +93,7 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 */
 	@Override
 	public void create(@NotNull String folderName, @NotNull String... files) {
-		Arrays.asList(files).forEach(this::create);
+		for (String fileName : files) this.create(folderName, fileName);
 	}
 	
 	/**
