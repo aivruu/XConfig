@@ -21,7 +21,7 @@ import java.util.Objects;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.0.3
+ * @version 1.0.4
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */

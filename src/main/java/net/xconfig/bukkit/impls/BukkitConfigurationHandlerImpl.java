@@ -15,7 +15,7 @@ import java.util.Objects;
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.0.3
+ * @version 1.0.4
  * @since 1.0.0
  * @see net.xconfig.bukkit.config.BukkitConfigurationHandler
  */

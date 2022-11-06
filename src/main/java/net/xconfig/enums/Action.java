@@ -4,7 +4,7 @@ package net.xconfig.enums;
  * Actions that can do with a file.
  *
  * @author InitSync
- * @version 1.0.3
+ * @version 1.0.4
  * @since 1.0.0
  */
 public enum Action {

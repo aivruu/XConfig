@@ -15,7 +15,7 @@ import java.util.Objects;
  * Implementation to handle the values from the configuration at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.0.3
+ * @version 1.0.4
  * @since 1.0.1
  */
 public final class BungeeConfigurationHandlerImpl implements BungeeConfigurationHandler {

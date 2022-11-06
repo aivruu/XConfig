@@ -23,7 +23,7 @@ import java.util.Objects;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.0.3
+ * @version 1.0.4
  * @since 1.0.1
  * @see net.xconfig.bungee.config.BungeeConfigurationModel
  */
