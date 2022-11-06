@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  * Interface to handle the instances creation.
  *
  * @author InitSync
- * @version 1.0.1
+ * @version 1.0.3
  * @since 1.0.0
  */
 public interface ConfigurationService {

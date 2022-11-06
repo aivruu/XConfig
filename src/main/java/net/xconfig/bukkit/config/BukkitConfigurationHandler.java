@@ -11,7 +11,7 @@ import java.util.List;
  * Interface model that handles the configuration handler for Bukkit.
  *
  * @author InitSync
- * @version 1.0.1
+ * @version 1.0.3
  * @since 1.0.0
  */
 public interface BukkitConfigurationHandler {
