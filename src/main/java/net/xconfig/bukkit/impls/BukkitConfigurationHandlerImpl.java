@@ -3,13 +3,11 @@ package net.xconfig.bukkit.impls;
 import net.xconfig.bukkit.config.BukkitConfigurationHandler;
 import net.xconfig.bukkit.config.BukkitConfigurationModel;
 import net.xconfig.enums.Action;
-import net.xconfig.enums.File;
 import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,55 +29,34 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	/**
 	 * Make some action with the files. Reload, Save or Write a new value.
 	 *
-	 * @param file   File type.
-	 * @param action Action type.
-	 * @param toPath Path for the value.
-	 * @param object Object/Value to set.
+	 * @param fileName Name of file.
+	 * @param action   Action type.
+	 * @param toPath   Path for the value.
+	 * @param object   Object/Value to set.
 	 */
 	@Override
 	public void doSomething(
-		 @NotNull File file,
-		 @NotNull Action action,
-		 @Nullable String toPath,
-		 @Nullable Object object,
-		 @Nullable String customFileName
+		@NotNull String fileName,
+		@NotNull Action action,
+		@Nullable String toPath,
+		@Nullable Object object
 	) {
-		Objects.requireNonNull(file, "The file type is null.");
+		Validate.notEmpty(fileName, "The file name is empty.");
 		Objects.requireNonNull(action, "The action type is null.");
 		
-		switch (file) {
-			case CONFIG:
-				switch (action) {
-					case RELOAD:
-						this.configuration.reload("config.yml");
-						break;
-					case SAVE:
-						this.configuration.save("config.yml");
-						break;
-					case WRITE:
-						assert toPath != null;
-						this.configuration
-							 .file("config.yml")
-							 .set(toPath, object);
-						break;
-				}
+		switch (action) {
+			case RELOAD:
+				this.configuration.reload(fileName);
 				break;
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				switch (action) {
-					case RELOAD:
-						this.configuration.reload(customFileName);
-						break;
-					case SAVE:
-						this.configuration.save(customFileName);
-						break;
-					case WRITE:
-						assert toPath != null;
-						this.configuration
-							 .file(customFileName)
-							 .set(toPath, object);
-						break;
-				}
+			case SAVE:
+				this.configuration.save(fileName);
+				break;
+			case WRITE:
+				assert toPath != null && !toPath.isEmpty();
+				assert object != null;
+				this.configuration
+					.file(fileName)
+					.set(toPath, object);
 				break;
 		}
 	}
@@ -87,217 +64,112 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	/**
 	 * Returns a String from path requested.
 	 *
-	 * @param file           File type.
-	 * @param path           Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName Name of file.
+	 * @param path     Path required.
 	 * @return A text string.
 	 */
 	@Override
-	public @NotNull String text(
-		 @NotNull File file,
-		 @NotNull String path,
-		 @Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public @NotNull String text(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .getString(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .getString(path);
-		}
-		return "";
+		return this.configuration
+			.file(fileName)
+			.getString(path);
 	}
 	
 	/**
 	 * Returns a integer.
 	 *
-	 * @param file           File type.
-	 * @param path           Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName Name of file.
+	 * @param path     Path required.
 	 * @return A number
 	 */
 	@Override
-	public int number(
-		 @NotNull File file,
-		 @NotNull String path,
-		 @Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public int number(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .getInt(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .getInt(path);
-		}
-		return 0;
+		return this.configuration
+			.file(path)
+			.getInt(path);
 	}
 	
 	/**
 	 * Returns an object from the path.
 	 *
-	 * @param file           File type.
-	 * @param path           Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName Name of file.
+	 * @param path     Path required.
 	 * @return An object.
 	 */
 	@Override
-	public @Nullable Object any(
-		 @NotNull File file,
-		 @NotNull String path,
-		 @Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public @Nullable Object any(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .get(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .get(path);
-		}
-		return null;
+		return this.configuration
+			.file(fileName)
+			.get(path);
 	}
 	
 	/**
 	 * Returns a list.
 	 *
-	 * @param file           File type.
-	 * @param path           Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName Name of file.
+	 * @param path     Path required.
 	 * @return A list.
 	 */
 	@Override
-	public @NotNull List<?> list(
-		 @NotNull File file,
-		 @NotNull String path,
-		 @Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public @NotNull List<?> list(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .getList(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .getList(path);
-		}
-		return Collections.emptyList();
+		return this.configuration
+			.file(fileName)
+			.getList(path);
 	}
 	
 	/**
 	 * Returns a text list.
 	 *
-	 * @param file           File type.
-	 * @param path           Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName Name of file.
+	 * @param path     Path required.
 	 * @return A string list.
 	 */
 	@Override
-	public @NotNull List<String> textList(
-		 @NotNull File file,
-		 @NotNull String path,
-		 @Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public @NotNull List<String> textList(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .getStringList(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .getStringList(path);
-		}
-		return Collections.emptyList();
+		return this.configuration
+			.file(fileName)
+			.getStringList(path);
 	}
 	
 	/**
 	 * Returns a boolean.
 	 *
-	 * @param file File type.
-	 * @param path Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName of file.
+	 * @param path     Path required.
 	 * @return A boolean value.
 	 */
 	@Override
-	public boolean condition(
-		@NotNull File file,
-		@NotNull String path,
-		@Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public boolean condition(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .getBoolean(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .getBoolean(path);
-		}
-		return false;
+		return this.configuration
+			.file(fileName)
+			.getBoolean(path);
 	}
 	
 	/**
 	 * Returns a ConfigurationSection object.
 	 *
-	 * @param file           File type.
-	 * @param path           Path required.
-	 * @param customFileName Name of the custom file.
+	 * @param fileName Name of file.
+	 * @param path     Path required.
 	 * @return A ConfigurationSection
 	 */
 	@Override
-	public @Nullable ConfigurationSection configSection(
-		 @NotNull File file,
-		 @NotNull String path,
-		 @Nullable String customFileName
-	) {
-		Objects.requireNonNull(file, "The file type is null.");
-		Validate.notEmpty(path, "The path to get is empty.");
+	public @Nullable ConfigurationSection configSection(@NotNull String fileName, @NotNull String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		switch (file) {
-			case CONFIG:
-				return this.configuration
-					 .file("config.yml")
-					 .getConfigurationSection(path);
-			case CUSTOM:
-				assert customFileName != null && !customFileName.isEmpty();
-				return this.configuration
-					 .file(customFileName)
-					 .getConfigurationSection(path);
-		}
-		return null;
+		return this.configuration
+			.file(fileName)
+			.getConfigurationSection(path);
 	}
 }
