@@ -89,7 +89,7 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		return this.configuration
-			.file(path)
+			.file(fileName)
 			.getInt(path);
 	}
 	

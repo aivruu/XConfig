@@ -88,7 +88,7 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		return this.configuration
-			.file(path)
+			.file(fileName)
 			.getInt(path);
 	}
 	
