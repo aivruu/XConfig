@@ -1,28 +1,34 @@
 package net.xconfig.bungee.impls;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.config.Configuration;
 import net.xconfig.bungee.config.BungeeConfigurationHandler;
 import net.xconfig.bungee.config.BungeeConfigurationModel;
+import net.xconfig.bungee.utils.TextUtils;
 import net.xconfig.enums.Action;
 import org.apache.commons.lang.Validate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Implementation to handle the values from the configuration at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.0.4
+ * @version 1.0.5
  * @since 1.0.1
  */
 public final class BungeeConfigurationHandlerImpl implements BungeeConfigurationHandler {
 	private final BungeeConfigurationModel configuration;
+	private final Logger logger;
 	
 	public BungeeConfigurationHandlerImpl(@NotNull BungeeConfigurationModel configuration) {
 		this.configuration = Objects.requireNonNull(configuration, "The ConfigurationModel is null.");
+		this.logger = ProxyServer.getInstance().getLogger();
 	}
 	
 	/**
@@ -51,8 +57,9 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 				this.configuration.save(fileName);
 				break;
 			case WRITE:
-				assert toPath != null && !toPath.isEmpty();
-				assert object != null;
+				if (toPath == null) throw new NullPointerException("The path requested is null.");
+				if (object == null) throw new NullPointerException("The object to set is null.");
+				
 				this.configuration
 					.file(fileName)
 					.set(toPath, object);
@@ -71,9 +78,15 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	public @NotNull String text(@NotNull String fileName, @NotNull String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		return this.configuration
+		String text = this.configuration
 			.file(fileName)
 			.getString(path);
+		if (text == null) {
+			this.logger.info("Cannot get the string from the path '" + path + "'. Please check the configuration file.");
+			return "";
+		}
+		
+		return TextUtils.colorize(text);
 	}
 	
 	/**
@@ -103,9 +116,15 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	public @Nullable Object any(@NotNull String fileName, @NotNull String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		return this.configuration
+		Object object = this.configuration
 			.file(fileName)
 			.get(path);
+		if (object == null) {
+			this.logger.info("Cannot get the object from '" + path + "'. Please check the path.");
+			return null;
+		}
+		
+		return object;
 	}
 	
 	/**
@@ -119,9 +138,15 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	public @NotNull List<?> list(@NotNull String fileName, @NotNull String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		return this.configuration
+		List<?> list = this.configuration
 			.file(fileName)
 			.getList(path);
+		if (list == null) {
+			this.logger.info("Cannot found the list requested from '" + path + "'. Check the configuration file.");
+			return Collections.emptyList();
+		}
+		
+		return list;
 	}
 	
 	/**
@@ -135,9 +160,9 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	public @NotNull List<String> textList(@NotNull String fileName, @NotNull String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		return this.configuration
+		return TextUtils.colorize(this.configuration
 			.file(fileName)
-			.getStringList(path);
+			.getStringList(path));
 	}
 	
 	/**
@@ -167,9 +192,15 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	public @Nullable Configuration section(@NotNull String fileName, @NotNull String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		return this.configuration
+		Configuration section = this.configuration
 			.file(fileName)
 			.getSection(path);
+		if (section == null) {
+			this.logger.severe("The Configuration object from the path '" + path + "' is null.");
+			return null;
+		}
+		
+		return section;
 	}
 	
 	/**
