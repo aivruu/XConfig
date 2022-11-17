@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.0.4
+ * @version 1.0.5
  * @since 1.0.0
  */
 public interface BukkitConfigurationModel {

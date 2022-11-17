@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
  * Configuration Interface for the Bungee implementations.
  *
  * @author InitSync
- * @version 1.0.4
+ * @version 1.0.5
  * @since 1.0.1
  */
 public interface BungeeConfigurationModel {
