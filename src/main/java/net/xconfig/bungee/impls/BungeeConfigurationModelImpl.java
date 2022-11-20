@@ -23,7 +23,7 @@ import java.util.Objects;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.0.5
+ * @version 1.0.6
  * @since 1.0.1
  * @see net.xconfig.bungee.config.BungeeConfigurationModel
  */
@@ -91,12 +91,8 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 				if (!file.exists()) {
 					stream = this.plugin.getClass()
 						 .getClassLoader()
-						 .getResourceAsStream(
-								this.plugin.getDataFolder()
+						 .getResourceAsStream(folderName
 								+ File.separator
-								+ folderName
-								+ File.separator
-								+ folderName
 							  + file);
 				}
 			}

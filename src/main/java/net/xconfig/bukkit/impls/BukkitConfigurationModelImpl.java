@@ -21,7 +21,7 @@ import java.util.Objects;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.0.5
+ * @version 1.0.6
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */
@@ -181,13 +181,9 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	public void save(@NotNull String folderName, @NotNull String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		this.plugin.saveResource(
-			 this.plugin.getDataFolder()
-			 + File.separator
-			 + folderName
-			 + File.separator
-			 + fileName,
-			 false
-		);
+		this.plugin.saveResource(folderName +
+			File.separator +
+			fileName,
+			false);
 	}
 }
