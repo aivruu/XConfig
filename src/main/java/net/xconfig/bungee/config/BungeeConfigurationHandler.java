@@ -11,7 +11,7 @@ import java.util.List;
  * Interface for the ConfigurationHandler of Bungee platforms.
  *
  * @author InitSync
- * @version 1.0.5
+ * @version 1.0.6
  * @since 1.0.1
  */
 public interface BungeeConfigurationHandler {
