@@ -8,14 +8,14 @@ import net.xconfig.bungee.config.BungeeConfigurationModel;
 import net.xconfig.bungee.impls.BungeeConfigurationHandlerImpl;
 import net.xconfig.bungee.impls.BungeeConfigurationModelImpl;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Logger;
 
 /**
  * Interface to handle the instances creation.
  *
  * @author InitSync
- * @version 1.0.6
+ * @version 1.0.7
  * @since 1.0.6
  */
 public interface XConfig {
@@ -23,43 +23,43 @@ public interface XConfig {
 	 * Returns a new instance of BukkitConfigurationModelImpl.
 	 *
 	 * @param plugin A JavaPlugin instance required for the files creation.
+	 * @param logger A Logger object.
 	 * @return A ManagerModel instance.
 	 */
-	@Contract ("_ -> new")
-	static @NotNull BukkitConfigurationModelImpl bukkitManager(@NotNull JavaPlugin plugin) {
-		return new BukkitConfigurationModelImpl(plugin);
+	static BukkitConfigurationModelImpl bukkitManager(JavaPlugin plugin, Logger logger) {
+		return new BukkitConfigurationModelImpl(plugin, logger);
 	}
 	
 	/**
 	 * Returns a new instance of BukkitConfigurationHandlerImpl.
 	 *
 	 * @param model A ConfigurationModel instance.
+	 * @param logger A Logger object.
 	 * @return A ManagerModel instance.
 	 */
-	@Contract (value = "_ -> new", pure = true)
-	static @NotNull BukkitConfigurationHandlerImpl bukkitHandler(@NotNull BukkitConfigurationModel model) {
-		return new BukkitConfigurationHandlerImpl(model);
+	static BukkitConfigurationHandlerImpl bukkitHandler(BukkitConfigurationModel model, Logger logger) {
+		return new BukkitConfigurationHandlerImpl(model, logger);
 	}
 	
 	/**
 	 * Returns a new BungeeConfigurationModelImpl object.
 	 *
 	 * @param plugin A Plugin instance required for the files creation.
+	 * @param logger A Logger object.
 	 * @return A BukkitConfigurationModelImpl object.
 	 */
-	@Contract ("_ -> new")
-	static @NotNull BungeeConfigurationModelImpl bungeeManager(@NotNull Plugin plugin) {
-		return new BungeeConfigurationModelImpl(plugin);
+	static BungeeConfigurationModelImpl bungeeManager(Plugin plugin, Logger logger) {
+		return new BungeeConfigurationModelImpl(plugin, logger);
 	}
 	
 	/**
 	 * Returns a new instance of BungeeConfigurationHandlerImpl.
 	 *
 	 * @param model A BungeeConfigurationModel object.
+	 * @param logger A Logger object.
 	 * @return A BungeeConfigurationHandlerImpl object.
 	 */
-	@Contract (value = "_ -> new", pure = true)
-	static @NotNull BungeeConfigurationHandlerImpl bungeeHandler(@NotNull BungeeConfigurationModel model) {
-		return new BungeeConfigurationHandlerImpl(model);
+	static BungeeConfigurationHandlerImpl bungeeHandler(BungeeConfigurationModel model, Logger logger) {
+		return new BungeeConfigurationHandlerImpl(model, logger);
 	}
 }

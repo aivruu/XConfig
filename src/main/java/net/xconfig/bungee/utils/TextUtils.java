@@ -2,7 +2,6 @@ package net.xconfig.bungee.utils;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.0.6
+ * @version 1.0.7
  * @since 1.0.5
  */
 public final class TextUtils {
@@ -25,7 +24,7 @@ public final class TextUtils {
 	
 	private TextUtils() {}
 	
-	public static @NotNull List<String> colorize(@NotNull Collection<String> text) {
+	public static List<String> colorize(Collection<String> text) {
 		return text.stream()
 			.map(net.xconfig.bukkit.utils.TextUtils::colorize)
 			.collect(Collectors.toList());
@@ -42,7 +41,7 @@ public final class TextUtils {
 	 * @param text Text to colorize.
 	 * @return Text colorized.
 	 */
-	public static @NotNull String colorize(@NotNull String text) {
+	public static String colorize(String text) {
 		if (VERSION < 735) return ChatColor.translateAlternateColorCodes('&', text);
 		
 		String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
