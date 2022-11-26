@@ -7,8 +7,6 @@ import net.xconfig.enums.Action;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,9 +25,9 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	private final BukkitConfigurationModel configuration;
 	private final Logger logger;
 	
-	public BukkitConfigurationHandlerImpl(@NotNull BukkitConfigurationModel configuration) {
-		this.configuration = Objects.requireNonNull(configuration, "The ConfigurationModel object is null.");
-		this.logger = Bukkit.getLogger();
+	public BukkitConfigurationHandlerImpl(BukkitConfigurationModel configuration, Logger logger) {
+		this.configuration = Objects.requireNonNull(configuration, "The BukkitConfigurationModel object is null.");
+		this.logger = Objects.requireNonNull(logger, "The Logger object is null.");
 	}
 	
 	/**
@@ -41,12 +39,7 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	 * @param object   Object/Value to set.
 	 */
 	@Override
-	public void doSomething(
-		@NotNull String fileName,
-		@NotNull Action action,
-		@Nullable String toPath,
-		@Nullable Object object
-	) {
+	public void doSomething(String fileName, Action action, String toPath, Object object) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		Objects.requireNonNull(action, "The action type is null.");
 		
@@ -58,8 +51,15 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 				this.configuration.save(fileName);
 				break;
 			case WRITE:
-				if (toPath == null) throw new NullPointerException("The path requested is null.");
-				if (object == null) throw new NullPointerException("The object to set is null.");
+				if (toPath == null) {
+					this.logger.severe("The path requested is null.");
+					break;
+				}
+				
+				if (object == null) {
+					this.logger.severe("The object to set is null.");
+					break;
+				}
 				
 				this.configuration
 					.file(fileName)
@@ -71,115 +71,144 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	/**
 	 * Returns a String from path requested.
 	 *
-	 * @param fileName Name of file.
-	 * @param path     Path required.
+	 * @param fileName    Name of file.
+	 * @param path        Path required.
+	 * @param defaultText Default text if the path not exist.
 	 * @return A text string.
 	 */
 	@Override
-	public @NotNull String text(@NotNull String fileName, @NotNull String path) {
+	public String text(String fileName, String path, String defaultText) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
-		String text = this.configuration
+		return this.configuration
 			.file(fileName)
-			.getString(path);
-		if (text == null) {
-			this.logger.severe("Cannot get the string from the path '" + path + "'. Please check the configuration file.");
-			return "";
-		}
-		
-		return TextUtils.colorize(text);
+			.getString(path, defaultText);
 	}
 	
 	/**
 	 * Returns a integer.
 	 *
-	 * @param fileName Name of file.
-	 * @param path     Path required.
+	 * @param fileName      Name of file.
+	 * @param path          Path required.
+	 * @param defaultNumber Default number if the path not exist.
 	 * @return A number
 	 */
 	@Override
-	public int number(@NotNull String fileName, @NotNull String path) {
+	public int number(String fileName, String path, int defaultNumber) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
 		return this.configuration
 			.file(fileName)
-			.getInt(path);
+			.getInt(path, defaultNumber);
 	}
 	
 	/**
 	 * Returns an object from the path.
 	 *
-	 * @param fileName Name of file.
-	 * @param path     Path required.
+	 * @param fileName      Name of file.
+	 * @param path          Path required.
+	 * @param defaultObject Default object if the path not exist.
 	 * @return An object.
 	 */
 	@Override
-	public @Nullable Object any(@NotNull String fileName, @NotNull String path) {
+	public Object any(String fileName, String path, Object defaultObject) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
-		Object object = this.configuration
+		return this.configuration
 			.file(fileName)
-			.get(path);
-		if (object == null) {
-			this.logger.severe("Cannot get the object from '" + path + "'. Please check the path.");
-			return null;
-		}
-		
-		return object;
+			.get(path, defaultObject);
 	}
 	
 	/**
 	 * Returns a list.
 	 *
-	 * @param fileName Name of file.
-	 * @param path     Path required.
+	 * @param fileName    Name of file.
+	 * @param path        Path required.
+	 * @param defaultList Default list if the path not exist.
 	 * @return A list.
 	 */
 	@Override
-	public @NotNull List<?> list(@NotNull String fileName, @NotNull String path) {
+	public List<?> list(String fileName, String path, List<?> defaultList) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
-		List<?> list = this.configuration
+		return this.configuration
 			.file(fileName)
-			.getList(path);
-		if (list == null) {
-			this.logger.severe("Cannot found the list requested from '" + path + "'. Check the configuration file.");
-			return Collections.emptyList();
-		}
-		
-		return list;
+			.getList(path, defaultList);
 	}
 	
 	/**
 	 * Returns a text list.
 	 *
-	 * @param fileName Name of file.
-	 * @param path     Path required.
+	 * @param fileName        Name of file.
+	 * @param path            Path required.
+	 * @param defaultTextList Default string list if the path not exist.
 	 * @return A string list.
 	 */
 	@Override
-	public @NotNull List<String> textList(@NotNull String fileName, @NotNull String path) {
+	public List<String> textList(String fileName, String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
-		return TextUtils.colorize(this.configuration
+		return this.configuration
 			.file(fileName)
-			.getStringList(path));
+			.getStringList(path);
 	}
 	
 	/**
 	 * Returns a boolean.
 	 *
-	 * @param fileName of file.
+	 * @param fileName       Name of file.
+	 * @param path           Path required.
+	 * @param defaultBoolean Default boolean value if the path not exist.
+	 * @return A boolean value.
+	 */
+	@Override
+	public boolean condition(String fileName, String path, boolean defaultBoolean) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			.file(fileName)
+			.getBoolean(path, defaultBoolean);
+	}
+	
+	/**
+	 * Returns a boolean value depending if the file contains that path.
+	 *
+	 * @param fileName Name of file.
 	 * @param path     Path required.
 	 * @return A boolean value.
 	 */
 	@Override
-	public boolean condition(@NotNull String fileName, @NotNull String path) {
+	public boolean contains(String fileName, String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
 		return this.configuration
 			.file(fileName)
-			.getBoolean(path);
+			.contains(path);
+	}
+	
+	/**
+	 * Returns a double value.
+	 *
+	 * @param fileName            Name of file.
+	 * @param path                Path required.
+	 * @param defaultDoubleNumber Default double value if the path not exist.
+	 * @return A double.
+	 */
+	@Override
+	public double doubleNumber(String fileName, String path, double defaultDoubleNumber) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			.file(fileName)
+			.getDouble(path, defaultDoubleNumber);
 	}
 	
 	/**
@@ -190,17 +219,12 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	 * @return A ConfigurationSection
 	 */
 	@Override
-	public @Nullable ConfigurationSection configSection(@NotNull String fileName, @NotNull String path) {
+	public ConfigurationSection configSection(String fileName, String path) {
 		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
 		
-		ConfigurationSection section = this.configuration
+		return this.configuration
 			.file(fileName)
 			.getConfigurationSection(path);
-		if (section == null) {
-			this.logger.severe("The ConfigurationSection object requested in '" + path + "' is null, please check the configuration file.");
-			return null;
-		}
-		
-		return section;
 	}
 }
