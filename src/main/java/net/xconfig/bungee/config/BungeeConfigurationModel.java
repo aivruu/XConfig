@@ -1,14 +1,12 @@
 package net.xconfig.bungee.config;
 
 import net.md_5.bungee.config.Configuration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Configuration Interface for the Bungee implementations.
  *
  * @author InitSync
- * @version 1.0.6
+ * @version 1.0.7
  * @since 1.0.1
  */
 public interface BungeeConfigurationModel {
@@ -19,7 +17,7 @@ public interface BungeeConfigurationModel {
 	 * @param fileName Name of file.
 	 * @return A Configuration object.
 	 */
-	@Nullable Configuration file(@NotNull String fileName);
+	Configuration file(String fileName);
 	
 	/**
 	 * Creates a new file with a folder.
@@ -27,7 +25,7 @@ public interface BungeeConfigurationModel {
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
 	 */
-	void create(@NotNull String folderName, @NotNull String fileName);
+	void create(String folderName, String fileName);
 	
 	/**
 	 * Creates multiple files.
@@ -35,28 +33,42 @@ public interface BungeeConfigurationModel {
 	 * @param folderName Name of the folder.
 	 * @param files Names of the files.
 	 */
-	void create(@NotNull String folderName, @NotNull String... files);
+	void create(String folderName, String... files);
 	
 	/**
 	 * Loads an existing file.
 	 *
 	 * @param fileName Name of file.
 	 */
-	void load(@NotNull String fileName);
+	void load(String fileName);
 	
 	/**
 	 * Loads various existing files.
 	 *
 	 * @param files Names of the files.
 	 */
-	void load(@NotNull String... files);
+	void load(String... files);
+	
+	/**
+	 * Delete a file.
+	 *
+	 * @param fileName Name of file.
+	 */
+	void delete(String fileName);
+	
+	/**
+	 * Delete one or more files.
+	 *
+	 * @param files Names of files to delete.
+	 */
+	void delete(String... files);
 	
 	/**
 	 * Saves an existing file.
 	 *
 	 * @param fileName Name of file.
 	 */
-	void save(@NotNull String fileName);
+	void save(String fileName);
 	
 	/**
 	 * Saves the default content of file.
@@ -64,5 +76,5 @@ public interface BungeeConfigurationModel {
 	 * @param folderName Name of the folder of file.
 	 * @param fileName Name of file.
 	 */
-	void save(@NotNull String folderName, @NotNull String fileName);
+	void save(String folderName, String fileName);
 }

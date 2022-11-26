@@ -6,9 +6,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.xconfig.bungee.config.BungeeConfigurationModel;
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,22 +15,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.0.6
+ * @version 1.0.7
  * @since 1.0.1
  * @see net.xconfig.bungee.config.BungeeConfigurationModel
  */
 public final class BungeeConfigurationModelImpl implements BungeeConfigurationModel {
 	private final Plugin plugin;
+	private final Logger logger;
 	private final Map<String, File> files;
 	private final Map<String, Configuration> configurations;
 	
-	public BungeeConfigurationModelImpl(@NotNull Plugin plugin) {
+	public BungeeConfigurationModelImpl(Plugin plugin, Logger logger) {
 		this.plugin = Objects.requireNonNull(plugin, "The Plugin instance is null.");
+		this.logger = Objects.requireNonNull(logger, "The Logger object is null.");
 		this.files = new HashMap<>();
 		this.configurations = new HashMap<>();
 	}
@@ -46,13 +46,11 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 * @return A Configuration object.
 	 */
 	@Override
-	public @Nullable Configuration file(@NotNull String fileName) {
+	public Configuration file(String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.plugin
-				 .getLogger()
-				 .severe("Cannot get the file " + fileName + " because doesn't exist.");
+			this.logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
 			return null;
 		}
 		
@@ -66,46 +64,50 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 * @param fileName   Name of file.
 	 */
 	@Override
-	public void create(@NotNull String folderName, @NotNull String fileName) {
+	public void create(String folderName, String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			File file;
-			InputStream stream = null;
-			
-			if (folderName.isEmpty()) {
-				file = new File(this.plugin.getDataFolder(), fileName);
-				if (!file.exists()) {
-					stream = this.plugin
-						 .getClass()
-						 .getClassLoader()
-						 .getResourceAsStream(fileName);
+		if (this.files.containsKey(fileName) && this.configurations.containsKey(fileName)) return;
+		
+		File file;
+		boolean notFolder = folderName.isEmpty();
+		if (notFolder) file = new File(this.plugin.getDataFolder(), fileName);
+		else {
+			file = new File(
+				 this.plugin.getDataFolder()
+						+ File.separator
+						+ folderName
+						+ File.separator,
+				 fileName
+			);
+		}
+		
+		InputStream inputFile = null;
+		if (!file.exists()) {
+			if (this.plugin.getResourceAsStream(fileName) == null) {
+				try { file.createNewFile(); }
+				catch (IOException exception) {
+					this.logger.severe("Cannot create the file '" + fileName + "'.");
+					exception.printStackTrace();
+					return;
+				}
+			} else if (notFolder) {
+				inputFile = this.plugin.getResourceAsStream(fileName);
+				if (inputFile == null) {
+					this.logger.severe("Internal file " + fileName + " can't be found.");
+					return;
 				}
 			} else {
-				file = new File(
-					 this.plugin.getDataFolder()
-					 + File.separator
-					 + folderName
-					 + File.separator,
-					 fileName);
-				if (!file.exists()) {
-					stream = this.plugin.getClass()
-						 .getClassLoader()
-						 .getResourceAsStream(folderName
-								+ File.separator
-							  + file);
+				inputFile = this.plugin.getResourceAsStream(folderName + File.separator + file);
+				if (inputFile == null) {
+					this.logger.severe("Internal file " + fileName + " can't be found.");
+					return;
 				}
-			}
-			
-			if (stream == null) {
-				this.plugin
-					 .getLogger()
-					 .severe("Internal file " + fileName + " can't be found.");
-				return;
 			}
 			
 			try {
-				Files.copy(stream, file.toPath());
+				assert inputFile != null;
+				Files.copy(inputFile, file.toPath());
 				this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file));
 			} catch (Exception ignored) {}
 			
@@ -120,7 +122,7 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 * @param files Names of the files.
 	 */
 	@Override
-	public void create(@NotNull String folderName, @NotNull String... files) {
+	public void create(String folderName, String... files) {
 		for (String fileName : files) this.create(folderName, fileName);
 	}
 	
@@ -130,22 +132,17 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 * @param fileName Name of file.
 	 */
 	@Override
-	public void load(@NotNull String fileName) {
+	public void load(String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.plugin
-				 .getLogger()
-				 .severe("Cannot load the file " + fileName + " because doesn't exist.");
+			this.logger.severe("Cannot load the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
-		try {
-			ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.files.get(fileName));
-		} catch (IOException exception) {
-			this.plugin
-				 .getLogger()
-				 .severe("Cannot load the file " + fileName + ".");
+		try { ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.files.get(fileName)); }
+		catch (IOException exception) {
+			this.logger.severe("Cannot load the file " + fileName + ".");
 			exception.printStackTrace();
 		}
 	}
@@ -156,8 +153,36 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 * @param files Names of the files.
 	 */
 	@Override
-	public void load(@NotNull String... files) {
+	public void load(String... files) {
 		Arrays.asList(files).forEach(this::load);
+	}
+	
+	/**
+	 * Delete a file.
+	 *
+	 * @param fileName Name of file.
+	 */
+	@Override
+	public void delete(String fileName) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		
+		File file = this.files.get(fileName);
+		if (file == null) {
+			this.logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
+			return;
+		}
+		
+		if (!file.delete()) this.logger.severe("Cannot delete the file '" + fileName + "'.");
+	}
+	
+	/**
+	 * Delete one or more files.
+	 *
+	 * @param files Names of files to delete.
+	 */
+	@Override
+	public void delete(String... files) {
+		for (String fileName : files) this.delete(fileName);
 	}
 	
 	/**
@@ -166,27 +191,25 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 * @param fileName Name of file.
 	 */
 	@Override
-	public void save(@NotNull String fileName) {
+	public void save(String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
 		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			Bukkit.getLogger().severe("Cannot save the file " + fileName + " because doesn't exist.");
+			this.logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
 		try {
 			ConfigurationProvider.getProvider(YamlConfiguration.class).save(
-				 this.configurations.get(fileName),
-				 this.files.get(fileName)
+				this.configurations.get(fileName),
+				this.files.get(fileName)
 			);
 		} catch (IOException exception) {
-			this.plugin
-				 .getLogger()
-				 .severe("Failed to save the file" + fileName + ".");
+			this.logger.severe("Failed to save the file" + fileName + ".");
 			exception.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void save(@NotNull String folderName, @NotNull String fileName) {}
+	public void save(String folderName, String fileName) {}
 }
