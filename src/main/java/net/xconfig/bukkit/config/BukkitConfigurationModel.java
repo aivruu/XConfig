@@ -1,14 +1,12 @@
 package net.xconfig.bukkit.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.0.6
+ * @version 1.0.7
  * @since 1.0.0
  */
 public interface BukkitConfigurationModel {
@@ -18,7 +16,7 @@ public interface BukkitConfigurationModel {
 	 * @param fileName Name of file.
 	 * @return A FileConfiguration.
 	 */
-	@Nullable FileConfiguration file(@NotNull String fileName);
+	FileConfiguration file(String fileName);
 	
 	/**
 	 * Creates a new file with a folder.
@@ -26,7 +24,7 @@ public interface BukkitConfigurationModel {
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
 	 */
-	void create(@NotNull String folderName, @NotNull String fileName);
+	void create(String folderName, String fileName);
 	
 	/**
 	 * Creates multiple files.
@@ -34,35 +32,49 @@ public interface BukkitConfigurationModel {
 	 * @param folderName Name of the folder.
 	 * @param files Names of the files.
 	 */
-	void create(@NotNull String folderName, @NotNull String... files);
+	void create(String folderName, String... files);
 	
 	/**
 	 * Loads an existing file.
 	 *
 	 * @param fileName Name of file.
 	 */
-	void load(@NotNull String fileName);
+	void load(String fileName);
 	
 	/**
 	 * Loads various existing files.
 	 *
 	 * @param files Names of the files.
 	 */
-	void load(@NotNull String... files);
+	void load(String... files);
+	
+	/**
+	 * Delete a file.
+	 *
+	 * @param fileName Name of file.
+	 */
+	void delete(String fileName);
+	
+	/**
+	 * Delete one or more files.
+	 *
+	 * @param files Names of files to delete.
+	 */
+	void delete(String... files);
 	
 	/**
 	 * Reloads a file.
 	 *
 	 * @param fileName Name of file.
 	 */
-	void reload(@NotNull String fileName);
+	void reload(String fileName);
 	
 	/**
 	 * Saves an existing file.
 	 *
 	 * @param fileName Name of file.
 	 */
-	void save(@NotNull String fileName);
+	void save(String fileName);
 	
 	/**
 	 * Saves the default content of file.
@@ -70,5 +82,5 @@ public interface BukkitConfigurationModel {
 	 * @param folderName Name of the folder of file.
 	 * @param fileName Name of file.
 	 */
-	void save(@NotNull String folderName, @NotNull String fileName);
+	void save(String folderName, String fileName);
 }
