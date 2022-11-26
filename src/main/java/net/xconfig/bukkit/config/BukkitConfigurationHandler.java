@@ -2,8 +2,6 @@ package net.xconfig.bukkit.config;
 
 import net.xconfig.enums.Action;
 import org.bukkit.configuration.ConfigurationSection;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import java.util.List;
  * Interface model that handles the configuration handler for Bukkit.
  *
  * @author InitSync
- * @version 1.0.6
+ * @version 1.0.7
  * @since 1.0.0
  */
 public interface BukkitConfigurationHandler {
@@ -23,48 +21,47 @@ public interface BukkitConfigurationHandler {
 	 * @param toPath Path for the value.
 	 * @param object Object/Value to set.
 	 */
-	void doSomething(
-		@NotNull String fileName,
-		@NotNull Action action,
-		@Nullable String toPath,
-		@Nullable Object object
-	);
+	void doSomething(String fileName, Action action, String toPath, Object object);
 	
 	/**
 	 * Returns a String from path requested.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @param defaultText Default text if the path not exist.
 	 * @return A text string.
 	 */
-	@NotNull String text(@NotNull String fileName, @NotNull String path);
+	String text(String fileName, String path, String defaultText);
 	
 	/**
 	 * Returns a integer.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @param defaultNumber Default number if the path not exist.
 	 * @return A number
 	 */
-	int number(@NotNull String fileName, @NotNull String path);
+	int number(String fileName, String path, int defaultNumber);
 	
 	/**
 	 * Returns an object from the path.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @param defaultObject Default object if the path not exist.
 	 * @return An object.
 	 */
-	@Nullable Object any(@NotNull String fileName, @NotNull String path);
+	Object any(String fileName, String path, Object defaultObject);
 	
 	/**
 	 * Returns a list.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @param defaultList Default list if the path not exist.
 	 * @return A list.
 	 */
-	@NotNull List<?> list(@NotNull String fileName, @NotNull String path);
+	List<?> list(String fileName, String path, List<?> defaultList);
 	
 	/**
 	 * Returns a text list.
@@ -73,16 +70,36 @@ public interface BukkitConfigurationHandler {
 	 * @param path Path required.
 	 * @return A string list.
 	 */
-	@NotNull List<String> textList(@NotNull String fileName, @NotNull String path);
+	List<String> textList(String fileName, String path);
 	
 	/**
 	 * Returns a boolean.
 	 *
-	 * @param fileName of file.
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @param defaultBoolean Default boolean value if the path not exist.
+	 * @return A boolean value.
+	 */
+	boolean condition(String fileName, String path, boolean defaultBoolean);
+	
+	/**
+	 * Returns a boolean value depending if the file contains that path.
+	 *
+	 * @param fileName Name of file.
 	 * @param path Path required.
 	 * @return A boolean value.
 	 */
-	boolean condition(@NotNull String fileName, @NotNull String path);
+	boolean contains(String fileName, String path);
+	
+	/**
+	 * Returns a double value.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @param defaultDoubleNumber Default double value if the path not exist.
+	 * @return A double.
+	 */
+	double doubleNumber(String fileName, String path, double defaultDoubleNumber);
 	
 	/**
 	 * Returns a ConfigurationSection object.
@@ -91,5 +108,5 @@ public interface BukkitConfigurationHandler {
 	 * @param path Path required.
 	 * @return A ConfigurationSection
 	 */
-	@Nullable ConfigurationSection configSection(@NotNull String fileName, @NotNull String path);
+	ConfigurationSection configSection(String fileName, String path);
 }
