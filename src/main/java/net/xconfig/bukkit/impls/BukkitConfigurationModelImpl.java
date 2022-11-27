@@ -9,7 +9,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +18,7 @@ import java.util.logging.Logger;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.0.7
+ * @version 1.0.8
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */
@@ -61,23 +60,15 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 * @param fileName   Name of file.
 	 */
 	@Override
-	public void create(String folderName, String fileName) {
+	public void build(String folderName, String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		if (this.files.containsKey(fileName) && this.configurations.containsKey(fileName)) return;
-
+		File dataFolder = this.plugin.getDataFolder();
 		File file;
+		
 		boolean notFolder = folderName.isEmpty();
-		if (notFolder) file = new File(this.plugin.getDataFolder(), fileName);
-		else {
-			file = new File(
-				 this.plugin.getDataFolder() +
-						File.separator +
-						folderName +
-						File.separator,
-				 fileName
-			);
-		}
+		if (notFolder) file = new File(dataFolder, fileName);
+		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
 			if (this.plugin.getResource(fileName) == null) {
@@ -89,10 +80,10 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 				}
 			} else if (notFolder) this.plugin.saveResource(fileName, false);
 			else this.save(folderName, fileName);
-			
-			this.files.put(fileName, file);
-			this.configurations.put(fileName, YamlConfiguration.loadConfiguration(file));
 		}
+		
+		this.files.put(fileName, file);
+		this.configurations.put(fileName, YamlConfiguration.loadConfiguration(file));
 	}
 	
 	/**
@@ -102,35 +93,8 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 * @param files Names of the files.
 	 */
 	@Override
-	public void create(String folderName, String... files) {
-		for (String fileName : files) this.create(folderName, fileName);
-	}
-	
-	/**
-	 * Loads an existing file.
-	 *
-	 * @param fileName Name of file.
-	 */
-	@Override
-	public void load(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot load the file " + fileName + " because doesn't exist.");
-			return;
-		}
-		
-		YamlConfiguration.loadConfiguration(this.files.get(fileName));
-	}
-	
-	/**
-	 * Loads various existing files.
-	 *
-	 * @param files Names of the files.
-	 */
-	@Override
-	public void load(String... files) {
-		Arrays.asList(files).forEach(this::load);
+	public void build(String folderName, String... files) {
+		for (String fileName : files) this.build(folderName, fileName);
 	}
 	
 	/**

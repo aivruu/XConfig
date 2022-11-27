@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -21,7 +20,7 @@ import java.util.logging.Logger;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.0.7
+ * @version 1.0.8
  * @since 1.0.1
  * @see net.xconfig.bungee.config.BungeeConfigurationModel
  */
@@ -58,46 +57,32 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	}
 	
 	/**
-	 * Creates a new file with a folder.
+	 * Creates and loads a new file with a folder.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param fileName   Name of file.
 	 */
 	@Override
-	public void create(String folderName, String fileName) {
+	public void build(String folderName, String fileName) {
 		Validate.notEmpty(fileName, "The file name is empty.");
 		
-		if (this.files.containsKey(fileName) && this.configurations.containsKey(fileName)) return;
-		
+		File dataFolder = this.plugin.getDataFolder();
 		File file;
-		boolean notFolder = folderName.isEmpty();
-		if (notFolder) file = new File(this.plugin.getDataFolder(), fileName);
-		else {
-			file = new File(
-				 this.plugin.getDataFolder()
-						+ File.separator
-						+ folderName
-						+ File.separator,
-				 fileName
-			);
-		}
 		
-		InputStream inputFile = null;
+		boolean notFolder = folderName.isEmpty();
+		if (notFolder) file = new File(dataFolder, fileName);
+		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
+		
 		if (!file.exists()) {
-			if (this.plugin.getResourceAsStream(fileName) == null) {
+			InputStream inputFile = this.plugin.getResourceAsStream(fileName);
+			if (inputFile == null) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
 					this.logger.severe("Cannot create the file '" + fileName + "'.");
 					exception.printStackTrace();
 					return;
 				}
-			} else if (notFolder) {
-				inputFile = this.plugin.getResourceAsStream(fileName);
-				if (inputFile == null) {
-					this.logger.severe("Internal file " + fileName + " can't be found.");
-					return;
-				}
-			} else {
+			} else if (!notFolder) {
 				inputFile = this.plugin.getResourceAsStream(folderName + File.separator + file);
 				if (inputFile == null) {
 					this.logger.severe("Internal file " + fileName + " can't be found.");
@@ -110,51 +95,20 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 				Files.copy(inputFile, file.toPath());
 				this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file));
 			} catch (Exception ignored) {}
-			
-			this.files.put(fileName, file);
 		}
+		
+		this.files.put(fileName, file);
 	}
 	
 	/**
-	 * Creates multiple files.
+	 * Creates and loads multiple files.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param files Names of the files.
 	 */
 	@Override
-	public void create(String folderName, String... files) {
-		for (String fileName : files) this.create(folderName, fileName);
-	}
-	
-	/**
-	 * Loads an existing file.
-	 *
-	 * @param fileName Name of file.
-	 */
-	@Override
-	public void load(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot load the file " + fileName + " because doesn't exist.");
-			return;
-		}
-		
-		try { ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.files.get(fileName)); }
-		catch (IOException exception) {
-			this.logger.severe("Cannot load the file " + fileName + ".");
-			exception.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Loads various existing files.
-	 *
-	 * @param files Names of the files.
-	 */
-	@Override
-	public void load(String... files) {
-		Arrays.asList(files).forEach(this::load);
+	public void build(String folderName, String... files) {
+		for (String fileName : files) this.build(folderName, fileName);
 	}
 	
 	/**
