@@ -42,7 +42,7 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 		
 		switch (action) {
 			case RELOAD:
-				this.configuration.load(fileName);
+				this.configuration.reload(fileName);
 				break;
 			case SAVE:
 				this.configuration.save(fileName);
