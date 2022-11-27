@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.0.7
+ * @version 1.0.8
  * @since 1.0.5
  */
 public final class TextUtils {

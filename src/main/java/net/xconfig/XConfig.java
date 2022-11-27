@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Interface to handle the instances creation.
  *
  * @author InitSync
- * @version 1.0.7
+ * @version 1.0.8
  * @since 1.0.6
  */
 public interface XConfig {
