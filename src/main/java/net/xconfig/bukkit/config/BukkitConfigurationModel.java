@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.0.7
+ * @version 1.0.8
  * @since 1.0.0
  */
 public interface BukkitConfigurationModel {
@@ -19,34 +19,20 @@ public interface BukkitConfigurationModel {
 	FileConfiguration file(String fileName);
 	
 	/**
-	 * Creates a new file with a folder.
+	 * Creates and load a new file with/without a folder.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
 	 */
-	void create(String folderName, String fileName);
+	void build(String folderName, String fileName);
 	
 	/**
-	 * Creates multiple files.
+	 * Creates and loads multiple files.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param files Names of the files.
 	 */
-	void create(String folderName, String... files);
-	
-	/**
-	 * Loads an existing file.
-	 *
-	 * @param fileName Name of file.
-	 */
-	void load(String fileName);
-	
-	/**
-	 * Loads various existing files.
-	 *
-	 * @param files Names of the files.
-	 */
-	void load(String... files);
+	void build(String folderName, String... files);
 	
 	/**
 	 * Delete a file.
