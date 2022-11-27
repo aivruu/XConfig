@@ -5,7 +5,7 @@ XConfig is a Spigot Plugin Development library. Simple and easy to use allows yo
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/05d1dab7b9f6420a917c5cf39f07a3da)](https://www.codacy.com/gh/InitSync/XConfig/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=InitSync/XConfig&amp;utm_campaign=Badge_Grade)
 
 # 🛠️ | Installation
-XConfig installation is very easy, if you're using a dependency manager such as Maven or Gradle. Or just import the library to BuildPath of your project.
+XConfig installation is very easy, you can import the library using a dependency manager such as Maven or Gradle. Or just add the jar to BuildPath of your project.
 
 To get the jar, either download it from [GitHub](https://github.com/InitSync/XConfig/releases) or [Spigot](https://www.spigotmc.org/resources/xconfig.105977/). Or just [Build it locally](https://github.com/InitSync/XConfig#--build)
 
