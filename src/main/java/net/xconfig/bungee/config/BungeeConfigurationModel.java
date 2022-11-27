@@ -50,6 +50,13 @@ public interface BungeeConfigurationModel {
 	void delete(String... files);
 	
 	/**
+	 * Reloads a file.
+	 *
+	 * @param fileName Name of file.
+	 */
+	void reload(String fileName);
+	
+	/**
 	 * Saves an existing file.
 	 *
 	 * @param fileName Name of file.

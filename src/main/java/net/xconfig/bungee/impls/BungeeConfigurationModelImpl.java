@@ -94,7 +94,10 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 				assert inputFile != null;
 				Files.copy(inputFile, file.toPath());
 				this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file));
-			} catch (Exception ignored) {}
+			} catch (IOException exception) {
+				this.logger.severe("Cannot create the file '" + fileName + "'.");
+				exception.printStackTrace();
+			}
 		}
 		
 		this.files.put(fileName, file);
@@ -137,6 +140,27 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	@Override
 	public void delete(String... files) {
 		for (String fileName : files) this.delete(fileName);
+	}
+	
+	/**
+	 * Reloads a file.
+	 *
+	 * @param fileName Name of file.
+	 */
+	@Override
+	public void reload(String fileName) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		
+		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
+			this.logger.severe("Cannot reload the file " + fileName + " because doesn't exist.");
+			return;
+		}
+		
+		try { ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.files.get(fileName)); }
+		catch (IOException exception) {
+			this.logger.severe("Cannot reload the file '" + fileName + "'.");
+			exception.printStackTrace();
+		}
 	}
 	
 	/**
