@@ -75,20 +75,22 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 		
 		if (!file.exists()) {
 			InputStream inputFile = this.plugin.getResourceAsStream(fileName);
-			if (inputFile == null) {
+			if (notFolder && this.plugin.getResourceAsStream(fileName) == null) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
 					this.logger.severe("Cannot create the file '" + fileName + "'.");
 					exception.printStackTrace();
 					return;
 				}
-			} else if (!notFolder) {
-				inputFile = this.plugin.getResourceAsStream(folderName + File.separator + file);
-				if (inputFile == null) {
-					this.logger.severe("Internal file " + fileName + " can't be found.");
+			} else if (!notFolder && this.plugin.getResourceAsStream(folderName + File.separator + fileName) == null) {
+				try { file.createNewFile(); }
+				catch (IOException exception) {
+					this.logger.severe("Cannot create the file '" + fileName + "'.");
+					exception.printStackTrace();
 					return;
 				}
-			}
+			} else if (notFolder) inputFile = this.plugin.getResourceAsStream(fileName);
+			else inputFile = this.plugin.getResourceAsStream(folderName + File.separator + file);
 			
 			try {
 				assert inputFile != null;
