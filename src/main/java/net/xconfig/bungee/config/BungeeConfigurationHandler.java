@@ -9,7 +9,7 @@ import java.util.List;
  * Interface for the ConfigurationHandler of Bungee platforms.
  *
  * @author InitSync
- * @version 1.0.8
+ * @version 1.1.0
  * @since 1.0.1
  */
 public interface BungeeConfigurationHandler {

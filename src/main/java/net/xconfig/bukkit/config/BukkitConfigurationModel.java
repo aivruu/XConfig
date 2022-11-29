@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.0.8
+ * @version 1.1.0
  * @since 1.0.0
  */
 public interface BukkitConfigurationModel {

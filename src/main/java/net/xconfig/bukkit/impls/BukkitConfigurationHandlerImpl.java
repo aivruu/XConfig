@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.0.8
+ * @version 1.1.0
  * @since 1.0.0
  * @see net.xconfig.bukkit.config.BukkitConfigurationHandler
  */
@@ -145,7 +145,6 @@ public final class BukkitConfigurationHandlerImpl implements BukkitConfiguration
 	 *
 	 * @param fileName        Name of file.
 	 * @param path            Path required.
-	 * @param defaultTextList Default string list if the path not exist.
 	 * @return A string list.
 	 */
 	@Override
