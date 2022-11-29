@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.0.8
+ * @version 1.1.0
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */
@@ -71,7 +71,14 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
-			if (this.plugin.getResource(fileName) == null) {
+			if (notFolder && this.plugin.getResource(fileName) == null) {
+				try { file.createNewFile(); }
+				catch (IOException exception) {
+					this.logger.severe("Cannot create the file '" + fileName + "'.");
+					exception.printStackTrace();
+					return;
+				}
+			} else if (!notFolder && this.plugin.getResource(folderName + File.separator + fileName) == null) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
 					this.logger.severe("Cannot create the file '" + fileName + "'.");
