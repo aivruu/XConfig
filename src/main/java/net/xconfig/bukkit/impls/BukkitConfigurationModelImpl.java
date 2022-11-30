@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.1.0
+ * @version 1.1.1
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */
@@ -71,37 +71,12 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
-			if (notFolder && this.plugin.getResource(fileName) == null) {
-				try { file.createNewFile(); }
-				catch (IOException exception) {
-					this.logger.severe("Cannot create the file '" + fileName + "'.");
-					exception.printStackTrace();
-					return;
-				}
-			} else if (!notFolder && this.plugin.getResource(folderName + File.separator + fileName) == null) {
-				try { file.createNewFile(); }
-				catch (IOException exception) {
-					this.logger.severe("Cannot create the file '" + fileName + "'.");
-					exception.printStackTrace();
-					return;
-				}
-			} else if (notFolder) this.plugin.saveResource(fileName, false);
+			if (notFolder) this.plugin.saveResource(fileName, false);
 			else this.save(folderName, fileName);
 		}
 		
 		this.files.put(fileName, file);
 		this.configurations.put(fileName, YamlConfiguration.loadConfiguration(file));
-	}
-	
-	/**
-	 * Creates multiple files.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param files Names of the files.
-	 */
-	@Override
-	public void build(String folderName, String... files) {
-		for (String fileName : files) this.build(folderName, fileName);
 	}
 	
 	/**
@@ -120,16 +95,6 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 		}
 		
 		if (!file.delete()) this.logger.severe("Cannot delete the file '" + fileName + "'.");
-	}
-	
-	/**
-	 * Delete one or more files.
-	 *
-	 * @param files Names of files to delete.
-	 */
-	@Override
-	public void delete(String... files) {
-		for (String fileName : files) this.delete(fileName);
 	}
 	
 	/**
