@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.0.8
+ * @version 1.1.1
  * @since 1.0.1
  * @see net.xconfig.bungee.config.BungeeConfigurationModel
  */
@@ -74,46 +74,28 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
-			InputStream inputFile = this.plugin.getResourceAsStream(fileName);
-			if (notFolder && this.plugin.getResourceAsStream(fileName) == null) {
-				try { file.createNewFile(); }
-				catch (IOException exception) {
-					this.logger.severe("Cannot create the file '" + fileName + "'.");
-					exception.printStackTrace();
-					return;
-				}
-			} else if (!notFolder && this.plugin.getResourceAsStream(folderName + File.separator + fileName) == null) {
-				try { file.createNewFile(); }
-				catch (IOException exception) {
-					this.logger.severe("Cannot create the file '" + fileName + "'.");
-					exception.printStackTrace();
-					return;
-				}
-			} else if (notFolder) inputFile = this.plugin.getResourceAsStream(fileName);
+			InputStream inputFile;
+			if (notFolder) inputFile = this.plugin.getResourceAsStream(fileName);
 			else inputFile = this.plugin.getResourceAsStream(folderName + File.separator + file);
 			
-			try {
-				assert inputFile != null;
-				Files.copy(inputFile, file.toPath());
-				this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file));
-			} catch (IOException exception) {
+			if (inputFile == null) {
+				this.logger.severe("The resource '" + fileName + "' isn't inside of plugin jar file!");
+				return;
+			}
+			
+			try { Files.copy(inputFile, file.toPath()); }
+			catch (IOException exception) {
 				this.logger.severe("Cannot create the file '" + fileName + "'.");
 				exception.printStackTrace();
 			}
 		}
 		
 		this.files.put(fileName, file);
-	}
-	
-	/**
-	 * Creates and loads multiple files.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param files Names of the files.
-	 */
-	@Override
-	public void build(String folderName, String... files) {
-		for (String fileName : files) this.build(folderName, fileName);
+		try { this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file)); }
+		catch (IOException exception) {
+			this.logger.severe("Cannot load the file '" + fileName + "'.");
+			exception.printStackTrace();
+		}
 	}
 	
 	/**
@@ -132,16 +114,6 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 		}
 		
 		if (!file.delete()) this.logger.severe("Cannot delete the file '" + fileName + "'.");
-	}
-	
-	/**
-	 * Delete one or more files.
-	 *
-	 * @param files Names of files to delete.
-	 */
-	@Override
-	public void delete(String... files) {
-		for (String fileName : files) this.delete(fileName);
 	}
 	
 	/**
