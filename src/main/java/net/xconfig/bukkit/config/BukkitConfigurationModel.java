@@ -6,10 +6,29 @@ import org.bukkit.configuration.file.FileConfiguration;
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.1.0
+ * @version 1.1.1
  * @since 1.0.0
  */
 public interface BukkitConfigurationModel {
+	/**
+	 * Creates and loads multiple files.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param files Names of the files.
+	 */
+	default void build(String folderName, String... files) {
+		for (String file : files) this.build(folderName, file);
+	}
+	
+	/**
+	 * Delete one or more files.
+	 *
+	 * @param files Names of files to delete.
+	 */
+	default void delete(String... files) {
+		for (String file : files) this.delete(file);
+	}
+	
 	/**
 	 * Returns a FileConfiguration object using the file specified.
 	 *
@@ -27,26 +46,11 @@ public interface BukkitConfigurationModel {
 	void build(String folderName, String fileName);
 	
 	/**
-	 * Creates and loads multiple files.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param files Names of the files.
-	 */
-	void build(String folderName, String... files);
-	
-	/**
 	 * Delete a file.
 	 *
 	 * @param fileName Name of file.
 	 */
 	void delete(String fileName);
-	
-	/**
-	 * Delete one or more files.
-	 *
-	 * @param files Names of files to delete.
-	 */
-	void delete(String... files);
 	
 	/**
 	 * Reloads a file.
