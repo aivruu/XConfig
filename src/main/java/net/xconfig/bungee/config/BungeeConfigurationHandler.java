@@ -9,7 +9,7 @@ import java.util.List;
  * Interface for the ConfigurationHandler of Bungee platforms.
  *
  * @author InitSync
- * @version 1.1.0
+ * @version 1.1.1
  * @since 1.0.1
  */
 public interface BungeeConfigurationHandler {
@@ -28,13 +28,31 @@ public interface BungeeConfigurationHandler {
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @return A string.
+	 */
+	String text(String fileName, String path);
+	
+	/**
+	 * Returns a String from path requested that can return a default value.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
 	 * @param defaultText Default text if the path not exist.
 	 * @return A text string.
 	 */
 	String text(String fileName, String path, String defaultText);
 	
 	/**
-	 * Returns a integer.
+	 * Returns a number.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return A number
+	 */
+	int number(String fileName, String path);
+	
+	/**
+	 * Returns an int number or a default value.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -48,6 +66,15 @@ public interface BungeeConfigurationHandler {
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @return An object.
+	 */
+	Object any(String fileName, String path);
+	
+	/**
+	 * Returns an object from the path or a default value.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
 	 * @param defaultObject Default object if the path not exist.
 	 * @return An object.
 	 */
@@ -55,6 +82,15 @@ public interface BungeeConfigurationHandler {
 	
 	/**
 	 * Returns a list.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return A list.
+	 */
+	List<?> list(String fileName, String path);
+	
+	/**
+	 * Returns a list from the path requested, or a default value if doesn't exist.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -77,6 +113,15 @@ public interface BungeeConfigurationHandler {
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @return A boolean value.
+	 */
+	boolean condition(String fileName, String path);
+	
+	/**
+	 * Returns a boolean or a default value if the path doesn't exist.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
 	 * @param defaultBoolean Default boolean value if the path not exist.
 	 * @return A boolean value.
 	 */
@@ -92,7 +137,16 @@ public interface BungeeConfigurationHandler {
 	boolean contains(String fileName, String path);
 	
 	/**
-	 * Returns a double value.
+	 * Returns a double number.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return A double.
+	 */
+	double doubleNumber(String fileName, String path);
+	
+	/**
+	 * Returns a double number or a default value if the path doesn't exist.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -111,11 +165,20 @@ public interface BungeeConfigurationHandler {
 	Configuration section(String fileName, String path);
 	
 	/**
-	 * Returns a char from the file.
+	 * Returns a char from the path.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
-	 * @param defaultChar Default char value if the path not exist.
+	 * @return A char
+	 */
+	char character(String fileName, String path);
+	
+	/**
+	 * Returns a char from the path or a default value if the path doesn't exist.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @param defaultChar Default value to return.
 	 * @return A char
 	 */
 	char character(String fileName, String path, char defaultChar);
