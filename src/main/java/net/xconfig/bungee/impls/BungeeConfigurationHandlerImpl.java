@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Implementation to handle the values from the configuration at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.0
+ * @version 1.1.1
  * @since 1.0.1
  */
 public final class BungeeConfigurationHandlerImpl implements BungeeConfigurationHandler {
@@ -70,6 +70,29 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @return A string.
+	 */
+	@Override
+	public String text(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		String text = this.configuration
+			 .file(fileName)
+			 .getString(path);
+		if (text == null) {
+			this.logger.severe("Cannot get the text from the path of file '" + fileName + "' because doesn't exist.");
+			return null;
+		}
+		
+		return TextUtils.colorize(text);
+	}
+	
+	/**
+	 * Returns a String from path requested that can return a default value.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
 	 * @param defaultText Default text if the path not exist.
 	 * @return A text string.
 	 */
@@ -84,7 +107,24 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	}
 	
 	/**
-	 * Returns a integer.
+	 * Returns a number.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return A number
+	 */
+	@Override
+	public int number(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			 .file(fileName)
+			 .getInt(path);
+	}
+	
+	/**
+	 * Returns an int number or a default value.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -99,6 +139,29 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 		return this.configuration
 			.file(fileName)
 			.getInt(path, defaultNumber);
+	}
+	
+	/**
+	 * Returns an object from the path.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return An object.
+	 */
+	@Override
+	public Object any(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		Object object = this.configuration
+			 .file(fileName)
+			 .get(path);
+		if (object == null) {
+			this.logger.severe("Cannot get the object from the path of file '" + fileName + "' because doesn't exist.");
+			return null;
+		}
+		
+		return object;
 	}
 	
 	/**
@@ -121,6 +184,23 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	
 	/**
 	 * Returns a list.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return A list.
+	 */
+	@Override
+	public List<?> list(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			 .file(fileName)
+			 .getList(path);
+	}
+	
+	/**
+	 * Returns a list from the path requested, or a default value if doesn't exist.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -159,6 +239,23 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
+	 * @return A boolean value.
+	 */
+	@Override
+	public boolean condition(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			 .file(fileName)
+			 .getBoolean(path);
+	}
+	
+	/**
+	 * Returns a boolean or a default value if the path doesn't exist.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
 	 * @param defaultBoolean Default boolean value if the path not exist.
 	 * @return A boolean value.
 	 */
@@ -190,7 +287,24 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	}
 	
 	/**
-	 * Returns a double value.
+	 * Returns a double number.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @return A double.
+	 */
+	@Override
+	public double doubleNumber(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			 .file(fileName)
+			 .getDouble(path);
+	}
+	
+	/**
+	 * Returns a double number or a default value if the path doesn't exist.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -229,7 +343,24 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
-	 * @param defaultChar Default char value if the path not exist.
+	 * @return A char
+	 */
+	@Override
+	public char character(String fileName, String path) {
+		Validate.notEmpty(fileName, "The file name is empty.");
+		Validate.notEmpty(path, "The path is empty.");
+		
+		return this.configuration
+			 .file(fileName)
+			 .getChar(path);
+	}
+	
+	/**
+	 * Returns a char from the path or a default value if the path doesn't exist.
+	 *
+	 * @param fileName Name of file.
+	 * @param path Path required.
+	 * @param defaultChar Default value to return.
 	 * @return A char
 	 */
 	@Override
