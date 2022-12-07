@@ -1,11 +1,11 @@
 package net.xconfig.bungee.impls;
 
+import com.google.common.base.Preconditions;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.xconfig.bungee.config.BungeeConfigurationModel;
-import org.apache.commons.lang.Validate;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.1
  * @see net.xconfig.bungee.config.BungeeConfigurationModel
  */
@@ -46,14 +46,14 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 */
 	@Override
 	public Configuration file(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
+		if (!files.containsKey(fileName) && !configurations.containsKey(fileName)) {
+			logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
 			return null;
 		}
 		
-		return this.configurations.get(fileName);
+		return configurations.get(fileName);
 	}
 	
 	/**
@@ -64,9 +64,9 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 */
 	@Override
 	public void build(String folderName, String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		File dataFolder = this.plugin.getDataFolder();
+		File dataFolder = plugin.getDataFolder();
 		File file;
 		
 		boolean notFolder = folderName.isEmpty();
@@ -75,25 +75,25 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 		
 		if (!file.exists()) {
 			InputStream inputFile;
-			if (notFolder) inputFile = this.plugin.getResourceAsStream(fileName);
-			else inputFile = this.plugin.getResourceAsStream(folderName + File.separator + file);
+			if (notFolder) inputFile = plugin.getResourceAsStream(fileName);
+			else inputFile = plugin.getResourceAsStream(folderName + File.separator + file);
 			
 			if (inputFile == null) {
-				this.logger.severe("The resource '" + fileName + "' isn't inside of plugin jar file!");
+				logger.severe("The resource '" + fileName + "' isn't inside of plugin jar file!");
 				return;
 			}
 			
 			try { Files.copy(inputFile, file.toPath()); }
 			catch (IOException exception) {
-				this.logger.severe("Cannot create the file '" + fileName + "'.");
+				logger.severe("Cannot create the file '" + fileName + "'.");
 				exception.printStackTrace();
 			}
 		}
 		
-		this.files.put(fileName, file);
-		try { this.configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file)); }
+		files.put(fileName, file);
+		try { configurations.put(fileName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file)); }
 		catch (IOException exception) {
-			this.logger.severe("Cannot load the file '" + fileName + "'.");
+			logger.severe("Cannot load the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
 	}
@@ -105,15 +105,15 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 */
 	@Override
 	public void delete(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		File file = this.files.get(fileName);
+		File file = files.get(fileName);
 		if (file == null) {
-			this.logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
+			logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
 			return;
 		}
 		
-		if (!file.delete()) this.logger.severe("Cannot delete the file '" + fileName + "'.");
+		if (!file.delete()) logger.severe("Cannot delete the file '" + fileName + "'.");
 	}
 	
 	/**
@@ -123,16 +123,16 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 */
 	@Override
 	public void reload(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot reload the file " + fileName + " because doesn't exist.");
+		if (!files.containsKey(fileName) && !configurations.containsKey(fileName)) {
+			logger.severe("Cannot reload the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
-		try { ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.files.get(fileName)); }
+		try { ConfigurationProvider.getProvider(YamlConfiguration.class).load(files.get(fileName)); }
 		catch (IOException exception) {
-			this.logger.severe("Cannot reload the file '" + fileName + "'.");
+			logger.severe("Cannot reload the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
 	}
@@ -144,24 +144,17 @@ public final class BungeeConfigurationModelImpl implements BungeeConfigurationMo
 	 */
 	@Override
 	public void save(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
+		if (!files.containsKey(fileName) && !configurations.containsKey(fileName)) {
+			logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
-		try {
-			ConfigurationProvider.getProvider(YamlConfiguration.class).save(
-				this.configurations.get(fileName),
-				this.files.get(fileName)
-			);
-		} catch (IOException exception) {
-			this.logger.severe("Failed to save the file" + fileName + ".");
+		try { ConfigurationProvider.getProvider(YamlConfiguration.class).save(configurations.get(fileName), files.get(fileName)); }
+		catch (IOException exception) {
+			logger.severe("Failed to save the file" + fileName + ".");
 			exception.printStackTrace();
 		}
 	}
-	
-	@Override
-	public void save(String folderName, String fileName) {}
 }
