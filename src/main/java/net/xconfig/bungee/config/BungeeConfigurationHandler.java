@@ -1,7 +1,6 @@
 package net.xconfig.bungee.config;
 
 import net.md_5.bungee.config.Configuration;
-import net.xconfig.enums.Action;
 
 import java.util.List;
 
@@ -9,19 +8,18 @@ import java.util.List;
  * Interface for the ConfigurationHandler of Bungee platforms.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.1
  */
 public interface BungeeConfigurationHandler {
 	/**
-	 * Make some action with the files. Reload, Save or Write a new value.
+	 * Set an object inside of file at the specified path.
 	 *
 	 * @param fileName Name of file.
-	 * @param action Action type.
 	 * @param toPath Path for the value.
 	 * @param object Object/Value to set.
 	 */
-	void doSomething(String fileName, Action action, String toPath, Object object);
+	void write(String fileName, String toPath, Object object);
 	
 	/**
 	 * Returns a String from path requested.

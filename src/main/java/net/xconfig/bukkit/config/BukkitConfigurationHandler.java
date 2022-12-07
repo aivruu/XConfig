@@ -1,6 +1,5 @@
 package net.xconfig.bukkit.config;
 
-import net.xconfig.enums.Action;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
@@ -9,19 +8,18 @@ import java.util.List;
  * Interface model that handles the configuration handler for Bukkit.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.0
  */
 public interface BukkitConfigurationHandler {
 	/**
-	 * Make some action with the files. Reload, Save or Write a new value.
+	 * Set an object inside of file at the specified path.
 	 *
 	 * @param fileName Name of file.
-	 * @param action Action type.
 	 * @param toPath Path for the value.
 	 * @param object Object/Value to set.
 	 */
-	void doSomething(String fileName, Action action, String toPath, Object object);
+	void write(String fileName, String toPath, Object object);
 	
 	/**
 	 * Returns a String from path requested.
