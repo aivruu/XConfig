@@ -1,7 +1,7 @@
 package net.xconfig.bukkit.impls;
 
+import com.google.common.base.Preconditions;
 import net.xconfig.bukkit.config.BukkitConfigurationModel;
-import org.apache.commons.lang.Validate;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */
@@ -43,14 +43,14 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 */
 	@Override
 	public FileConfiguration file(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
+		if (!configurations.containsKey(fileName)) {
+			logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
 			return null;
 		}
 		
-		return this.configurations.get(fileName);
+		return configurations.get(fileName);
 	}
 	
 	/**
@@ -61,9 +61,9 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 */
 	@Override
 	public void build(String folderName, String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		File dataFolder = this.plugin.getDataFolder();
+		File dataFolder = plugin.getDataFolder();
 		File file;
 		
 		boolean notFolder = folderName.isEmpty();
@@ -71,12 +71,12 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
-			if (notFolder) this.plugin.saveResource(fileName, false);
-			else this.save(folderName, fileName);
+			if (notFolder) plugin.saveResource(fileName, false);
+			else plugin.saveResource(folderName + File.separator + fileName, false);
 		}
 		
-		this.files.put(fileName, file);
-		this.configurations.put(fileName, YamlConfiguration.loadConfiguration(file));
+		files.put(fileName, file);
+		configurations.put(fileName, YamlConfiguration.loadConfiguration(file));
 	}
 	
 	/**
@@ -86,15 +86,15 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 */
 	@Override
 	public void delete(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		File file = this.files.get(fileName);
+		File file = files.get(fileName);
 		if (file == null) {
-			this.logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
+			logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
 			return;
 		}
 		
-		if (!file.delete()) this.logger.severe("Cannot delete the file '" + fileName + "'.");
+		if (!file.delete()) logger.severe("Cannot delete the file '" + fileName + "'.");
 	}
 	
 	/**
@@ -104,19 +104,16 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 */
 	@Override
 	public void reload(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot reload the file " + fileName + " because doesn't exist.");
+		if (!files.containsKey(fileName) && !configurations.containsKey(fileName)) {
+			logger.severe("Cannot reload the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
-		try {
-			this.configurations
-				 .get(fileName)
-				 .load(this.files.get(fileName));
-		} catch (InvalidConfigurationException | IOException exception) {
-			this.logger.severe("Failed to reload the file" + fileName + ".");
+		try { configurations.get(fileName).load(files.get(fileName)); }
+		catch (InvalidConfigurationException | IOException exception) {
+			logger.severe("Failed to reload the file" + fileName + ".");
 			exception.printStackTrace();
 		}
 	}
@@ -128,33 +125,17 @@ public final class BukkitConfigurationModelImpl implements BukkitConfigurationMo
 	 */
 	@Override
 	public void save(String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!this.files.containsKey(fileName) && !this.configurations.containsKey(fileName)) {
-			this.logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
+		if (!files.containsKey(fileName) && !configurations.containsKey(fileName)) {
+			logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
-		try {
-			this.configurations
-				 .get(fileName)
-				 .save(this.files.get(fileName));
-		} catch (IOException exception) {
+		try { configurations.get(fileName).save(files.get(fileName)); }
+		catch (IOException exception) {
 			this.logger.severe("Failed to save the file" + fileName + ".");
 			exception.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Saves the default content of file.
-	 *
-	 * @param folderName Name of the folder of file.
-	 * @param fileName   Name of file.
-	 */
-	@Override
-	public void save(String folderName, String fileName) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		
-		this.plugin.saveResource(folderName + File.separator + fileName, false);
 	}
 }
