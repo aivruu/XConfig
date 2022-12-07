@@ -1,9 +1,7 @@
 package net.xconfig.bungee.utils;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,20 +11,24 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.5
  */
 public final class TextUtils {
-	@SuppressWarnings("deprecation")
-	private static final int VERSION = ProxyServer.getInstance().getProtocolVersion();
 	private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}}");
 	private static final StringBuilder BUILDER = new StringBuilder();
 	
 	private TextUtils() {}
 	
-	public static List<String> colorize(Collection<String> text) {
-		return text.stream()
-			.map(net.xconfig.bukkit.utils.TextUtils::colorize)
+	/**
+	 * Colorize the list content.
+	 *
+	 * @param textList A List of text.
+	 * @return The list colorized.
+	 */
+	public static List<String> colorize(List<String> textList) {
+		return textList.stream()
+			.map(TextUtils::colorize)
 			.collect(Collectors.toList());
 	}
 	
@@ -42,8 +44,6 @@ public final class TextUtils {
 	 * @return Text colorized.
 	 */
 	public static String colorize(String text) {
-		if (VERSION < 735) return ChatColor.translateAlternateColorCodes('&', text);
-		
 		String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
 		Matcher matcher = HEX_PATTERN.matcher(text);
 		
