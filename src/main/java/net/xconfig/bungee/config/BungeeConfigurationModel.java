@@ -6,7 +6,7 @@ import net.md_5.bungee.config.Configuration;
  * Configuration Interface for the Bungee implementations.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.1
  */
 public interface BungeeConfigurationModel {
@@ -66,12 +66,4 @@ public interface BungeeConfigurationModel {
 	 * @param fileName Name of file.
 	 */
 	void save(String fileName);
-	
-	/**
-	 * Saves the default content of file.
-	 *
-	 * @param folderName Name of the folder of file.
-	 * @param fileName Name of file.
-	 */
-	void save(String folderName, String fileName);
 }
