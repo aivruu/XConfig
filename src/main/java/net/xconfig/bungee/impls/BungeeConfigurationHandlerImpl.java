@@ -1,11 +1,10 @@
 package net.xconfig.bungee.impls;
 
+import com.google.common.base.Preconditions;
 import net.md_5.bungee.config.Configuration;
 import net.xconfig.bungee.config.BungeeConfigurationHandler;
 import net.xconfig.bungee.config.BungeeConfigurationModel;
 import net.xconfig.bungee.utils.TextUtils;
-import net.xconfig.enums.Action;
-import org.apache.commons.lang.Validate;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
  * Implementation to handle the values from the configuration at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.1
  */
 public final class BungeeConfigurationHandlerImpl implements BungeeConfigurationHandler {
@@ -28,41 +27,18 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	}
 	
 	/**
-	 * Make some action with the files. Reload, Save or Write a new value.
+	 * Set an object inside of file at the specified path.
 	 *
 	 * @param fileName Name of file.
-	 * @param action   Action type.
-	 * @param toPath   Path for the value.
-	 * @param object   Object/Value to set.
+	 * @param toPath Path for the value.
+	 * @param object Object/Value to set.
 	 */
 	@Override
-	public void doSomething(String fileName, Action action, String toPath, Object object) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Objects.requireNonNull(action, "The action type is null.");
+	public void write(String fileName, String toPath, Object object) {
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!toPath.isEmpty(), "The path for the value is empty.");
 		
-		switch (action) {
-			case RELOAD:
-				this.configuration.reload(fileName);
-				break;
-			case SAVE:
-				this.configuration.save(fileName);
-				break;
-			case WRITE:
-				if (toPath == null) {
-					this.logger.severe("The path requested is null.");
-					break;
-				}
-				
-				if (object == null) {
-					this.logger.severe("The object to set is null.");
-					break;
-				}
-				
-				this.configuration
-					.file(fileName)
-					.set(toPath, object);
-				break;
-		}
+		configuration.file(fileName).set(toPath, object);
 	}
 	
 	/**
@@ -74,14 +50,12 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public String text(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		String text = this.configuration
-			 .file(fileName)
-			 .getString(path);
+		String text = configuration.file(fileName).getString(path);
 		if (text == null) {
-			this.logger.severe("Cannot get the text from the path of file '" + fileName + "' because doesn't exist.");
+			logger.severe("Cannot get the text from the path of file '" + fileName + "' because doesn't exist.");
 			return null;
 		}
 		
@@ -98,12 +72,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public String text(String fileName, String path, String defaultText) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return TextUtils.colorize(this.configuration
-			.file(fileName)
-			.getString(path, defaultText));
+		return TextUtils.colorize(configuration.file(fileName).getString(path, defaultText));
 	}
 	
 	/**
@@ -115,12 +87,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public int number(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			 .file(fileName)
-			 .getInt(path);
+		return configuration.file(fileName).getInt(path);
 	}
 	
 	/**
@@ -133,12 +103,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public int number(String fileName, String path, int defaultNumber) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.getInt(path, defaultNumber);
+		return configuration.file(fileName).getInt(path, defaultNumber);
 	}
 	
 	/**
@@ -150,14 +118,12 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public Object any(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		Object object = this.configuration
-			 .file(fileName)
-			 .get(path);
+		Object object = configuration.file(fileName).get(path);
 		if (object == null) {
-			this.logger.severe("Cannot get the object from the path of file '" + fileName + "' because doesn't exist.");
+			logger.severe("Cannot get the object from the path of file '" + fileName + "' because doesn't exist.");
 			return null;
 		}
 		
@@ -165,7 +131,7 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	}
 	
 	/**
-	 * Returns an object from the path.
+	 * Returns an object from the path or a default value.
 	 *
 	 * @param fileName Name of file.
 	 * @param path Path required.
@@ -174,12 +140,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public Object any(String fileName, String path, Object defaultObject) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.get(path, defaultObject);
+		return configuration.file(fileName).get(path, defaultObject);
 	}
 	
 	/**
@@ -191,12 +155,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public List<?> list(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			 .file(fileName)
-			 .getList(path);
+		return configuration.file(fileName).getList(path);
 	}
 	
 	/**
@@ -209,29 +171,25 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public List<?> list(String fileName, String path, List<?> defaultList) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.getList(path, defaultList);
+		return configuration.file(fileName).getList(path, defaultList);
 	}
 	
 	/**
 	 * Returns a text list.
 	 *
-	 * @param fileName Name of file.
-	 * @param path     Path required.
+	 * @param fileName        Name of file.
+	 * @param path            Path required.
 	 * @return A string list.
 	 */
 	@Override
 	public List<String> textList(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return TextUtils.colorize(this.configuration
-			.file(fileName)
-			.getStringList(path));
+		return configuration.file(fileName).getStringList(path);
 	}
 	
 	/**
@@ -243,12 +201,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public boolean condition(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			 .file(fileName)
-			 .getBoolean(path);
+		return configuration.file(fileName).getBoolean(path);
 	}
 	
 	/**
@@ -261,29 +217,25 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public boolean condition(String fileName, String path, boolean defaultBoolean) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.getBoolean(path, defaultBoolean);
+		return configuration.file(fileName).getBoolean(path, defaultBoolean);
 	}
 	
 	/**
-	 * Checks if the file contains the path.
+	 * Returns a boolean value depending if the file contains that path.
 	 *
 	 * @param fileName Name of file.
-	 * @param path Path required.
-	 * @return A boolean
+	 * @param path     Path required.
+	 * @return A boolean value.
 	 */
 	@Override
 	public boolean contains(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.contains(path);
+		return configuration.file(fileName).contains(path);
 	}
 	
 	/**
@@ -295,12 +247,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public double doubleNumber(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			 .file(fileName)
-			 .getDouble(path);
+		return configuration.file(fileName).getDouble(path);
 	}
 	
 	/**
@@ -313,12 +263,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public double doubleNumber(String fileName, String path, double defaultDoubleNumber) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.getDouble(path, defaultDoubleNumber);
+		return configuration.file(fileName).getDouble(path, defaultDoubleNumber);
 	}
 	
 	/**
@@ -330,12 +278,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public Configuration section(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.getSection(path);
+		return configuration.file(fileName).getSection(path);
 	}
 	
 	/**
@@ -347,12 +293,10 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public char character(String fileName, String path) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			 .file(fileName)
-			 .getChar(path);
+		return configuration.file(fileName).getChar(path);
 	}
 	
 	/**
@@ -365,11 +309,9 @@ public final class BungeeConfigurationHandlerImpl implements BungeeConfiguration
 	 */
 	@Override
 	public char character(String fileName, String path, char defaultChar) {
-		Validate.notEmpty(fileName, "The file name is empty.");
-		Validate.notEmpty(path, "The path is empty.");
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return this.configuration
-			.file(fileName)
-			.getChar(path, defaultChar);
+		return configuration.file(fileName).getChar(path, defaultChar);
 	}
 }
