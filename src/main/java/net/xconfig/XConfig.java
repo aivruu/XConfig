@@ -9,13 +9,11 @@ import net.xconfig.bungee.impls.BungeeConfigurationHandlerImpl;
 import net.xconfig.bungee.impls.BungeeConfigurationModelImpl;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
-
 /**
  * Interface to handle the instances creation.
  *
  * @author InitSync
- * @version 1.1.1
+ * @version 1.1.23
  * @since 1.0.6
  */
 public interface XConfig {
@@ -26,8 +24,8 @@ public interface XConfig {
 	 * @param logger A Logger object.
 	 * @return A ManagerModel instance.
 	 */
-	static BukkitConfigurationModelImpl bukkitManager(JavaPlugin plugin, Logger logger) {
-		return new BukkitConfigurationModelImpl(plugin, logger);
+	static BukkitConfigurationModelImpl bukkitManager(JavaPlugin plugin) {
+		return new BukkitConfigurationModelImpl(plugin);
 	}
 	
 	/**
@@ -37,8 +35,8 @@ public interface XConfig {
 	 * @param logger A Logger object.
 	 * @return A ManagerModel instance.
 	 */
-	static BukkitConfigurationHandlerImpl bukkitHandler(BukkitConfigurationModel model, Logger logger) {
-		return new BukkitConfigurationHandlerImpl(model, logger);
+	static BukkitConfigurationHandlerImpl bukkitHandler(BukkitConfigurationModel model) {
+		return new BukkitConfigurationHandlerImpl(model);
 	}
 	
 	/**
@@ -48,8 +46,8 @@ public interface XConfig {
 	 * @param logger A Logger object.
 	 * @return A BukkitConfigurationModelImpl object.
 	 */
-	static BungeeConfigurationModelImpl bungeeManager(Plugin plugin, Logger logger) {
-		return new BungeeConfigurationModelImpl(plugin, logger);
+	static BungeeConfigurationModelImpl bungeeManager(Plugin plugin) {
+		return new BungeeConfigurationModelImpl(plugin);
 	}
 	
 	/**
@@ -59,7 +57,7 @@ public interface XConfig {
 	 * @param logger A Logger object.
 	 * @return A BungeeConfigurationHandlerImpl object.
 	 */
-	static BungeeConfigurationHandlerImpl bungeeHandler(BungeeConfigurationModel model, Logger logger) {
-		return new BungeeConfigurationHandlerImpl(model, logger);
+	static BungeeConfigurationHandlerImpl bungeeHandler(BungeeConfigurationModel model) {
+		return new BungeeConfigurationHandlerImpl(model);
 	}
 }
