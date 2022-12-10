@@ -6,7 +6,7 @@ import net.md_5.bungee.config.Configuration;
  * Configuration Interface for the Bungee implementations.
  *
  * @author InitSync
- * @version 1.1.2
+ * @version 1.1.23
  * @since 1.0.1
  */
 public interface BungeeConfigurationModel {
@@ -17,26 +17,32 @@ public interface BungeeConfigurationModel {
 	 * @param files Names of the files.
 	 */
 	default void build(String folderName, String... files) {
-		for (String file : files) this.build(folderName, file);
+		for (String file : files) {
+			build(folderName, file);
+		}
 	}
 	
 	/**
 	 * Delete one or more files.
 	 *
+	 * @param folderName Name of the folder.
 	 * @param files Names of files to delete.
 	 */
-	default void delete(String... files) {
-		for (String file : files) this.delete(file);
+	default void delete(String folderName, String... files) {
+		for (String file : files) {
+			delete(folderName, file);
+		}
 	}
 	
 	/**
-	 * Returns a Configuration object using the file name, if the file doesn't exist, will be
+	 * Returns a Configuration object using the file name and their folder name (if there are a folder), if the file doesn't exist, will be
 	 * return null.
 	 *
 	 * @param fileName Name of file.
+	 * @param folderName Name of the folder.
 	 * @return A Configuration object.
 	 */
-	Configuration file(String fileName);
+	Configuration file(String folderName, String fileName);
 	
 	/**
 	 * Creates and loads a new file with/without a folder.
@@ -50,20 +56,23 @@ public interface BungeeConfigurationModel {
 	 * Delete a file.
 	 *
 	 * @param fileName Name of file.
+	 * @param folderName Name of the folder.
 	 */
-	void delete(String fileName);
+	void delete(String folderName, String fileName);
 	
 	/**
 	 * Reloads a file.
 	 *
 	 * @param fileName Name of file.
+	 * @param folderName Name of the folder.
 	 */
-	void reload(String fileName);
+	void reload(String folderName, String fileName);
 	
 	/**
 	 * Saves an existing file.
 	 *
 	 * @param fileName Name of file.
+	 * @param folderName Name of the folder.
 	 */
-	void save(String fileName);
+	void save(String folderName, String fileName);
 }
