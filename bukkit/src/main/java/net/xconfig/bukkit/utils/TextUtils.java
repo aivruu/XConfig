@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at Bukkit (Spigot/Paper) platforms.
  *
  * @author InitSync
- * @version 1.1.23
+ * @version 1.1.26
  * @since 1.0.5
  */
 public final class TextUtils {

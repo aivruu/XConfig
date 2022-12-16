@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.1.23
+ * @version 1.1.26
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */

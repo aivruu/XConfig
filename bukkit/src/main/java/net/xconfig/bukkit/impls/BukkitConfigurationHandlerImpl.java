@@ -3,7 +3,7 @@ package net.xconfig.bukkit.impls;
 import com.google.common.base.Preconditions;
 import net.xconfig.bukkit.config.BukkitConfigurationHandler;
 import net.xconfig.bukkit.config.BukkitConfigurationModel;
-import net.xconfig.bungee.utils.TextUtils;
+import net.xconfig.bukkit.utils.TextUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.1.23
+ * @version 1.1.26
  * @since 1.0.0
  * @see net.xconfig.bukkit.config.BukkitConfigurationHandler
  */
