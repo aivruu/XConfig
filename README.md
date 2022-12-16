@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-  implementation("com.github.InitSync:XConfig:1.1.2")
+  implementation("com.github.InitSync:XConfig:1.1.23")
 }
 
 tasks {
@@ -41,7 +41,7 @@ Maven
   <dependency>
     <groupId>com.github.InitSync</groupId>
     <artifactId>XConfig</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.23</version>
     <scope>compile</scope>
   </dependency>
 </dependencies>
