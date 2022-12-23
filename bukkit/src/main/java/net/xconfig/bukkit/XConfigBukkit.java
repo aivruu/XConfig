@@ -9,7 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Interface to get the library classes instances.
  *
  * @author InitSync
- * @version 1.1.26
+ * @version 1.1.3
  * @since 1.1.26
  */
 public interface XConfigBukkit {

@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.1.26
+ * @version 1.1.3
  * @since 1.0.0
  * @see net.xconfig.bukkit.config.BukkitConfigurationHandler
  */

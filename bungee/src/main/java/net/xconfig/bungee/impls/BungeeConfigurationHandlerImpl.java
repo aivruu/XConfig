@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Implementation to handle the values from the configuration at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.23
+ * @version 1.1.3
  * @since 1.0.1
  */
 public final class BungeeConfigurationHandlerImpl
