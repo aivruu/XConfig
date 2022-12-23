@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * Class that handles internally the files creation.
  *
  * @author InitSync
- * @version 1.1.26
+ * @version 1.1.3
  * @since 1.0.0
  * @see BukkitConfigurationModel
  */
@@ -48,7 +48,7 @@ implements BukkitConfigurationModel {
 	public FileConfiguration file(String folderName, String fileName) {
 		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!files.contains(folderName, fileName) && !configurations.contains(folderName, fileName)) {
+		if (!isCreated(folderName, fileName)) {
 			logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
 			return null;
 		}
@@ -83,6 +83,37 @@ implements BukkitConfigurationModel {
 	}
 	
 	/**
+	 * Creates and load a new custom file with/without a folder.
+	 * This method allows create files that is not inside of plugin jar file.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param fileName   Name of file.
+	 */
+	@Override
+	public void buildCustom(String folderName, String fileName) {
+		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		
+		File dataFolder = plugin.getDataFolder();
+		File file;
+		
+		boolean notFolder = folderName.isEmpty();
+		if (notFolder) file = new File(dataFolder, fileName);
+		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
+		
+		if (!file.exists()) {
+			try { file.createNewFile(); }
+			catch (IOException exception) {
+				logger.severe("Cannot create the custom file '" + fileName + "'.");
+				exception.printStackTrace();
+				return;
+			}
+		}
+		
+		files.put(folderName, fileName, file);
+		configurations.put(folderName, fileName, YamlConfiguration.loadConfiguration(file));
+	}
+	
+	/**
 	 * Delete a file.
 	 *
 	 * @param folderName Name of the folder.
@@ -92,7 +123,7 @@ implements BukkitConfigurationModel {
 	public void delete(String folderName, String fileName) {
 		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!files.contains(folderName, fileName) && !configurations.contains(folderName, fileName)) {
+		if (!isCreated(folderName, fileName)) {
 			logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
 			return;
 		}
@@ -114,7 +145,7 @@ implements BukkitConfigurationModel {
 	public void reload(String folderName, String fileName) {
 		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!files.contains(folderName, fileName) && !configurations.contains(folderName, fileName)) {
+		if (!isCreated(folderName, fileName)) {
 			logger.severe("Cannot reload the file '" + fileName + "' because doesn't exist.");
 			return;
 		}
@@ -136,7 +167,7 @@ implements BukkitConfigurationModel {
 	public void save(String folderName, String fileName) {
 		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!files.contains(folderName, fileName) && !configurations.contains(folderName, fileName)) {
+		if (!isCreated(folderName, fileName)) {
 			logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
 			return;
 		}
@@ -146,5 +177,17 @@ implements BukkitConfigurationModel {
 			this.logger.severe("Failed to save the file" + fileName + ".");
 			exception.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Returns true if the file specified exists, overwise return false.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param fileName   Name of file.
+	 * @return A boolean value.
+	 */
+	@Override
+	public boolean isCreated(String folderName, String fileName) {
+		return files.contains(folderName, fileName) && configurations.contains(folderName, fileName);
 	}
 }
