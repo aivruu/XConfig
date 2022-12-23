@@ -27,7 +27,7 @@ cd XConfig
 ./gradlew shadowJar
 ```
 
-The files will be at the `bin` folder.
+The files will be at the `XConfig/bin` folder.
 
 # 🎫 | License
 This project is licensed under the GNU General Public License v3.0 license, for more details see the file [License](LICENSE)
