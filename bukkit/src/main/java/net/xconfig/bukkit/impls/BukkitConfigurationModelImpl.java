@@ -94,10 +94,11 @@ implements BukkitConfigurationModel {
 		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		File dataFolder = plugin.getDataFolder();
+		if (!dataFolder.exists()) dataFolder.mkdir();
+		
 		File file;
 		
-		boolean notFolder = folderName.isEmpty();
-		if (notFolder) file = new File(dataFolder, fileName);
+		if (folderName.isEmpty()) file = new File(dataFolder, fileName);
 		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
@@ -133,6 +134,9 @@ implements BukkitConfigurationModel {
 			logger.severe("Cannot delete the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
+		
+		files.remove(folderName, fileName);
+		configurations.remove(folderName, fileName);
 	}
 	
 	/**

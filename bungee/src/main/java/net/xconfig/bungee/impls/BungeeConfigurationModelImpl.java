@@ -113,6 +113,8 @@ implements BungeeConfigurationModel {
 		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		File dataFolder = plugin.getDataFolder();
+		if (!dataFolder.exists()) dataFolder.mkdir();
+		
 		File file;
 		
 		boolean notFolder = folderName.isEmpty();
@@ -156,6 +158,9 @@ implements BungeeConfigurationModel {
 			logger.severe("Cannot delete the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
+		
+		files.remove(folderName, fileName);
+		configurations.remove(folderName, fileName);
 	}
 	
 	/**
