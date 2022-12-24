@@ -98,15 +98,26 @@ implements BukkitConfigurationModel {
 		
 		File file;
 		
-		if (folderName.isEmpty()) file = new File(dataFolder, fileName);
-		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
-		
-		if (!file.exists()) {
-			try { file.createNewFile(); }
-			catch (IOException exception) {
-				logger.severe("Cannot create the custom file '" + fileName + "'.");
-				exception.printStackTrace();
-				return;
+		if (folderName.isEmpty()) {
+			file = new File(dataFolder, fileName);
+			if (!file.exists()) {
+				try { file.createNewFile(); }
+				catch (IOException exception) {
+					logger.severe("Cannot create the custom file '" + fileName + "'.");
+					exception.printStackTrace();
+					return;
+				}
+			}
+		} else {
+			new File(dataFolder, folderName).mkdir();
+			file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
+			if (!file.exists()) {
+				try { file.createNewFile(); }
+				catch (IOException exception) {
+					logger.severe("Cannot create the custom file '" + fileName + "'.");
+					exception.printStackTrace();
+					return;
+				}
 			}
 		}
 		
