@@ -1,17 +1,19 @@
-package net.xconfig.bungee.config;
+package net.xconfig.bukkit.config;
 
-import net.md_5.bungee.config.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Interface for the ConfigurationHandler of Bungee platforms.
+ * Interface model that handles the configuration handler for Bukkit.
  *
  * @author InitSync
- * @version 1.1.3
- * @since 1.0.1
+ * @version 1.1.4
+ * @since 1.0.0
  */
-public interface BungeeConfigurationHandler {
+public interface ConfigurationHandler {
 	/**
 	 * Set an object inside of file at the specified path.
 	 *
@@ -20,7 +22,7 @@ public interface BungeeConfigurationHandler {
 	 * @param toPath Path for the value.
 	 * @param object Object/Value to set.
 	 */
-	void write(String folderName, String fileName, String toPath, Object object);
+	void write(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String toPath, @Nonnull Object object);
 	
 	/**
 	 * Returns a String from path requested.
@@ -31,7 +33,7 @@ public interface BungeeConfigurationHandler {
 	 * @param colorize Do you want to apply the colors to text content?
 	 * @return A string.
 	 */
-	String text(String folderName, String fileName, String path, boolean colorize);
+	@Nullable String text(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean colorize);
 	
 	/**
 	 * Returns a String from path requested that can return a default value.
@@ -43,11 +45,11 @@ public interface BungeeConfigurationHandler {
 	 * @param colorize Do you want to apply the colors to text content?
 	 * @return A text string.
 	 */
-	String text(
-		 String folderName,
-		 String fileName,
-		 String path,
-		 String defaultText,
+	@Nonnull String text(
+		 @Nonnull String folderName,
+		 @Nonnull String fileName,
+		 @Nonnull String path,
+		 @Nonnull String defaultText,
 		 boolean colorize
 	);
 	
@@ -59,7 +61,7 @@ public interface BungeeConfigurationHandler {
 	 * @param path Path required.
 	 * @return A number
 	 */
-	int number(String folderName, String fileName, String path);
+	int number(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 	
 	/**
 	 * Returns an int number or a default value.
@@ -70,7 +72,7 @@ public interface BungeeConfigurationHandler {
 	 * @param defaultNumber Default number if the path not exist.
 	 * @return A number
 	 */
-	int number(String folderName, String fileName, String path, int defaultNumber);
+	int number(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, int defaultNumber);
 	
 	/**
 	 * Returns an object from the path.
@@ -80,7 +82,7 @@ public interface BungeeConfigurationHandler {
 	 * @param path Path required.
 	 * @return An object.
 	 */
-	Object any(String folderName, String fileName, String path);
+	@Nullable Object any(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 	
 	/**
 	 * Returns an object from the path or a default value.
@@ -91,7 +93,7 @@ public interface BungeeConfigurationHandler {
 	 * @param defaultObject Default object if the path not exist.
 	 * @return An object.
 	 */
-	Object any(String folderName, String fileName, String path, Object defaultObject);
+	@Nonnull Object any(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, @Nonnull Object defaultObject);
 	
 	/**
 	 * Returns a list.
@@ -101,7 +103,7 @@ public interface BungeeConfigurationHandler {
 	 * @param path Path required.
 	 * @return A list.
 	 */
-	List<?> list(String folderName, String fileName, String path);
+	@Nullable List<?> list(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 	
 	/**
 	 * Returns a list from the path requested, or a default value if doesn't exist.
@@ -112,7 +114,7 @@ public interface BungeeConfigurationHandler {
 	 * @param defaultList Default list if the path not exist.
 	 * @return A list.
 	 */
-	List<?> list(String folderName, String fileName, String path, List<?> defaultList);
+	@Nonnull List<?> list(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, @Nonnull List<?> defaultList);
 	
 	/**
 	 * Returns a text list.
@@ -123,7 +125,7 @@ public interface BungeeConfigurationHandler {
 	 * @param colorize Do you want to apply the colors to text content?
 	 * @return A string list.
 	 */
-	List<String> textList(String folderName, String fileName, String path, boolean colorize);
+	@Nonnull List<String> textList(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean colorize);
 	
 	/**
 	 * Returns a boolean.
@@ -133,7 +135,7 @@ public interface BungeeConfigurationHandler {
 	 * @param path Path required.
 	 * @return A boolean value.
 	 */
-	boolean condition(String folderName, String fileName, String path);
+	boolean condition(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 	
 	/**
 	 * Returns a boolean or a default value if the path doesn't exist.
@@ -144,7 +146,7 @@ public interface BungeeConfigurationHandler {
 	 * @param defaultBoolean Default boolean value if the path not exist.
 	 * @return A boolean value.
 	 */
-	boolean condition(String folderName, String fileName, String path, boolean defaultBoolean);
+	boolean condition(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean defaultBoolean);
 	
 	/**
 	 * Checks if the file contains the path.
@@ -154,7 +156,7 @@ public interface BungeeConfigurationHandler {
 	 * @param path Path required.
 	 * @return A boolean
 	 */
-	boolean contains(String folderName, String fileName, String path);
+	boolean contains(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 	
 	/**
 	 * Returns a double number.
@@ -164,7 +166,7 @@ public interface BungeeConfigurationHandler {
 	 * @param path Path required.
 	 * @return A double.
 	 */
-	double doubleNumber(String folderName, String fileName, String path);
+	double doubleNumber(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 	
 	/**
 	 * Returns a double number or a default value if the path doesn't exist.
@@ -175,36 +177,15 @@ public interface BungeeConfigurationHandler {
 	 * @param defaultDoubleNumber Default double value if the path not exist.
 	 * @return A double.
 	 */
-	double doubleNumber(String folderName, String fileName, String path, double defaultDoubleNumber);
+	double doubleNumber(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, double defaultDoubleNumber);
 	
 	/**
-	 * Returns a Configuration object.
+	 * Returns a ConfigurationSection object.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
 	 * @param path Path required.
-	 * @return A Configuration
+	 * @return A ConfigurationSection
 	 */
-	Configuration section(String folderName, String fileName, String path);
-	
-	/**
-	 * Returns a char from the path.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 * @param path Path required.
-	 * @return A char
-	 */
-	char character(String folderName, String fileName, String path);
-	
-	/**
-	 * Returns a char from the path or a default value if the path doesn't exist.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 * @param path Path required.
-	 * @param defaultChar Default value to return.
-	 * @return A char
-	 */
-	char character(String folderName, String fileName, String path, char defaultChar);
+	@Nullable ConfigurationSection configSection(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
 }
