@@ -1,32 +1,33 @@
-package net.xconfig.bukkit.impls;
+package net.xconfig.bukkit.config;
 
-import com.google.common.base.Preconditions;
-import net.xconfig.bukkit.config.BukkitConfigurationHandler;
-import net.xconfig.bukkit.config.BukkitConfigurationModel;
+import net.xconfig.bukkit.models.ConfigurationHandler;
+import net.xconfig.bukkit.models.ConfigurationManager;
 import net.xconfig.bukkit.utils.TextUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.bukkit.Bukkit.getLogger;
 
 /**
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.1.3
+ * @version 1.1.4
  * @since 1.0.0
- * @see net.xconfig.bukkit.config.BukkitConfigurationHandler
+ * @see ConfigurationHandler
  */
-public final class BukkitConfigurationHandlerImpl
-implements BukkitConfigurationHandler {
-	private final BukkitConfigurationModel configuration;
-	private final Logger logger;
+public final class SimpleConfigurationHandler
+implements ConfigurationHandler {
+	private final ConfigurationManager configuration;
 	
-	public BukkitConfigurationHandlerImpl(BukkitConfigurationModel configuration) {
+	public SimpleConfigurationHandler(ConfigurationManager configuration) {
 		this.configuration = Objects.requireNonNull(configuration, "The BukkitConfigurationModel object is null.");
-		this.logger = Bukkit.getLogger();
 	}
 	
 	/**
@@ -38,9 +39,10 @@ implements BukkitConfigurationHandler {
 	 * @param object Object/Value to set.
 	 */
 	@Override
-	public void write(String folderName, String fileName, String toPath, Object object) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!toPath.isEmpty(), "The path for the value is empty.");
+	public void write(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String toPath, @Nonnull Object object) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!toPath.isEmpty(), "The path for the value is empty.");
+		checkNotNull(object, "The object to set can't be null.");
 		
 		configuration.file(folderName, fileName).set(toPath, object);
 	}
@@ -55,13 +57,13 @@ implements BukkitConfigurationHandler {
 	 * @return A string.
 	 */
 	@Override
-	public String text(String folderName, String fileName, String path, boolean colorize) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public @Nullable String text(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean colorize) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		String text = configuration.file(folderName, fileName).getString(path);
 		if (text == null) {
-			logger.severe("Cannot get the text from the path of file '" + fileName + "' because doesn't exist.");
+			getLogger().severe("Cannot get the text from the path of file '" + fileName + "' because doesn't exist.");
 			return null;
 		}
 		
@@ -79,14 +81,14 @@ implements BukkitConfigurationHandler {
 	 * @return A text string.
 	 */
 	@Override
-	public String text(
-		 String folderName,
-		 String fileName,
-		 String path,
-		 String defaultText,
+	public @Nonnull String text(
+		 @Nonnull String folderName,
+		 @Nonnull String fileName,
+		 @Nonnull String path,
+		 @Nonnull String defaultText,
 		 boolean colorize) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		String text = configuration.file(folderName, fileName).getString(path, defaultText);
 		return colorize ? TextUtils.colorize(text) : text;
@@ -101,9 +103,9 @@ implements BukkitConfigurationHandler {
 	 * @return A number
 	 */
 	@Override
-	public int number(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public int number(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).getInt(path);
 	}
@@ -118,9 +120,9 @@ implements BukkitConfigurationHandler {
 	 * @return A number
 	 */
 	@Override
-	public int number(String folderName, String fileName, String path, int defaultNumber) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public int number(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, int defaultNumber) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).getInt(path, defaultNumber);
 	}
@@ -134,13 +136,13 @@ implements BukkitConfigurationHandler {
 	 * @return An object.
 	 */
 	@Override
-	public Object any(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public @Nullable Object any(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		Object object = configuration.file(folderName, fileName).get(path);
 		if (object == null) {
-			logger.severe("Cannot get the object from the path of file '" + fileName + "' because doesn't exist.");
+			getLogger().severe("Cannot get the object from the path of file '" + fileName + "' because doesn't exist.");
 			return null;
 		}
 		
@@ -157,10 +159,10 @@ implements BukkitConfigurationHandler {
 	 * @return An object.
 	 */
 	@Override
-	public Object any(String folderName, String fileName, String path, Object defaultObject) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
-		Preconditions.checkArgument(defaultObject != null, "The default object to return can't be null.");
+	public @Nonnull Object any(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, @Nonnull Object defaultObject) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
+		checkNotNull(defaultObject, "The default object to return can't be null.");
 		
 		return configuration.file(folderName, fileName).get(path, defaultObject);
 	}
@@ -174,11 +176,17 @@ implements BukkitConfigurationHandler {
 	 * @return A list.
 	 */
 	@Override
-	public List<?> list(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public @Nullable List<?> list(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getList(path);
+		List<?> list = configuration.file(folderName, fileName).getList(path);
+		if (list == null) {
+			getLogger().severe("Cannot get the List object from the path of '" + fileName + "' file because doesn't exist.");
+			return null;
+		}
+		
+		return list;
 	}
 	
 	/**
@@ -191,9 +199,10 @@ implements BukkitConfigurationHandler {
 	 * @return A list.
 	 */
 	@Override
-	public List<?> list(String folderName, String fileName, String path, List<?> defaultList) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public @Nonnull List<?> list(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, @Nonnull List<?> defaultList) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
+		checkNotNull(defaultList, "The default List object to return can't be null.");
 		
 		return configuration.file(folderName, fileName).getList(path, defaultList);
 	}
@@ -208,9 +217,9 @@ implements BukkitConfigurationHandler {
 	 * @return A string list.
 	 */
 	@Override
-	public List<String> textList(String folderName, String fileName, String path, boolean colorize) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public @Nonnull List<String> textList(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean colorize) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		List<String> textList = configuration.file(folderName, fileName).getStringList(path);
 		return colorize ? TextUtils.colorize(textList) : textList;
@@ -225,9 +234,9 @@ implements BukkitConfigurationHandler {
 	 * @return A boolean value.
 	 */
 	@Override
-	public boolean condition(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public boolean condition(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).getBoolean(path);
 	}
@@ -242,9 +251,9 @@ implements BukkitConfigurationHandler {
 	 * @return A boolean value.
 	 */
 	@Override
-	public boolean condition(String folderName, String fileName, String path, boolean defaultBoolean) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public boolean condition(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean defaultBoolean) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).getBoolean(path, defaultBoolean);
 	}
@@ -258,9 +267,9 @@ implements BukkitConfigurationHandler {
 	 * @return A boolean
 	 */
 	@Override
-	public boolean contains(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public boolean contains(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).contains(path);
 	}
@@ -274,9 +283,9 @@ implements BukkitConfigurationHandler {
 	 * @return A double.
 	 */
 	@Override
-	public double doubleNumber(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public double doubleNumber(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).getDouble(path);
 	}
@@ -291,9 +300,9 @@ implements BukkitConfigurationHandler {
 	 * @return A double.
 	 */
 	@Override
-	public double doubleNumber(String folderName, String fileName, String path, double defaultDoubleNumber) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public double doubleNumber(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, double defaultDoubleNumber) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
 		return configuration.file(folderName, fileName).getDouble(path, defaultDoubleNumber);
 	}
@@ -307,10 +316,16 @@ implements BukkitConfigurationHandler {
 	 * @return A ConfigurationSection
 	 */
 	@Override
-	public ConfigurationSection configSection(String folderName, String fileName, String path) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
-		Preconditions.checkArgument(!path.isEmpty(), "The path is empty.");
+	public @Nullable ConfigurationSection configSection(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getConfigurationSection(path);
+		ConfigurationSection section = configuration.file(folderName, fileName).getConfigurationSection(path);
+		if (section == null) {
+			getLogger().severe("Cannot get the ConfigurationSection object from the path of '" + fileName + "' file because doesn't exist.");
+			return null;
+		}
+		
+		return section;
 	}
 }
