@@ -1,15 +1,15 @@
 package net.xconfig.bukkit;
 
-import net.xconfig.bukkit.config.BukkitConfigurationModel;
-import net.xconfig.bukkit.impls.BukkitConfigurationHandlerImpl;
-import net.xconfig.bukkit.impls.BukkitConfigurationModelImpl;
+import net.xconfig.bukkit.config.ConfigurationManager;
+import net.xconfig.bukkit.impls.SimpleConfigurationHandler;
+import net.xconfig.bukkit.impls.SimpleConfigurationManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Interface to get the library classes instances.
  *
  * @author InitSync
- * @version 1.1.3
+ * @version 1.1.4
  * @since 1.1.26
  */
 public interface XConfigBukkit {
@@ -19,8 +19,8 @@ public interface XConfigBukkit {
 	 * @param plugin A JavaPlugin instance.
 	 * @return A BukkitConfigurationModelImpl instance.
 	 */
-	static BukkitConfigurationModelImpl manager(JavaPlugin plugin) {
-		return new BukkitConfigurationModelImpl(plugin);
+	static SimpleConfigurationManager manager(JavaPlugin plugin) {
+		return new SimpleConfigurationManager(plugin);
 	}
 	
 	/**
@@ -29,7 +29,7 @@ public interface XConfigBukkit {
 	 * @param manager A BukkitConfigurationModel instance.
 	 * @return A BukkitConfigurationHandlerImpl instance.
 	 */
-	static BukkitConfigurationHandlerImpl handler(BukkitConfigurationModel manager) {
-		return new BukkitConfigurationHandlerImpl(manager);
+	static SimpleConfigurationHandler handler(ConfigurationManager manager) {
+		return new SimpleConfigurationHandler(manager);
 	}
 }
