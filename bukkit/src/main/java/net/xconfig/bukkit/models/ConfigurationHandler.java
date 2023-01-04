@@ -1,4 +1,4 @@
-package net.xconfig.bukkit.config;
+package net.xconfig.bukkit.models;
 
 import org.bukkit.configuration.ConfigurationSection;
 
