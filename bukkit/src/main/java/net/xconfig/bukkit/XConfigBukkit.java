@@ -1,8 +1,8 @@
 package net.xconfig.bukkit;
 
-import net.xconfig.bukkit.config.ConfigurationManager;
-import net.xconfig.bukkit.impls.SimpleConfigurationHandler;
-import net.xconfig.bukkit.impls.SimpleConfigurationManager;
+import net.xconfig.bukkit.models.ConfigurationManager;
+import net.xconfig.bukkit.config.SimpleConfigurationHandler;
+import net.xconfig.bukkit.config.SimpleConfigurationManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
