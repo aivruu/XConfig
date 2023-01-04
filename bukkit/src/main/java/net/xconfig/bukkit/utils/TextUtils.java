@@ -3,6 +3,7 @@ package net.xconfig.bukkit.utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at Bukkit (Spigot/Paper) platforms.
  *
  * @author InitSync
- * @version 1.1.3
+ * @version 1.1.4
  * @since 1.0.5
  */
 public final class TextUtils {
@@ -30,7 +31,7 @@ public final class TextUtils {
 	 * @param textList A List of text.
 	 * @return The list colorized.
 	 */
-	public static List<String> colorize(List<String> textList) {
+	public static @Nonnull List<String> colorize(@Nonnull List<String> textList) {
 		return textList.stream()
 			.map(TextUtils::colorize)
 			.collect(Collectors.toList());
@@ -47,7 +48,7 @@ public final class TextUtils {
 	 * @param text Text to colorize.
 	 * @return Text colorized.
 	 */
-	public static String colorize(String text) {
+	public static @Nonnull String colorize(@Nonnull String text) {
 		if (VERSION < 16) return ChatColor.translateAlternateColorCodes('&', text);
 		
 		String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
