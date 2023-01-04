@@ -1,40 +1,40 @@
-package net.xconfig.bungee.impls;
+package net.xconfig.bungee.config;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
-import net.xconfig.bungee.config.BungeeConfigurationModel;
+import net.xconfig.bungee.models.ConfigurationManager;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Objects;
-import java.util.logging.Logger;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static net.md_5.bungee.api.ProxyServer.getInstance;
 
 /**
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.1.3
+ * @version 1.1.4
  * @since 1.0.1
- * @see net.xconfig.bungee.config.BungeeConfigurationModel
+ * @see ConfigurationManager
  */
-public final class BungeeConfigurationModelImpl
-implements BungeeConfigurationModel {
+public final class SimpleConfigurationManager
+implements ConfigurationManager {
 	private final Plugin plugin;
-	private final Logger logger;
 	private final Table<String, String, File> files;
 	private final Table<String, String, Configuration> configurations;
 	
-	public BungeeConfigurationModelImpl(Plugin plugin) {
+	public SimpleConfigurationManager(Plugin plugin) {
 		this.plugin = Objects.requireNonNull(plugin, "The Plugin instance is null.");
-		this.logger = ProxyServer.getInstance().getLogger();
 		this.files = HashBasedTable.create();
 		this.configurations = HashBasedTable.create();
 	}
@@ -48,11 +48,11 @@ implements BungeeConfigurationModel {
 	 * @return A Configuration object.
 	 */
 	@Override
-	public Configuration file(String folderName, String fileName) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+	public @Nullable Configuration file(@Nonnull String folderName, @Nonnull String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!isCreated(folderName, fileName)) {
-			logger.severe("Cannot get the file " + fileName + " because doesn't exist.");
+		if (!exists(folderName, fileName)) {
+			getInstance().getLogger().severe("Cannot get the file " + fileName + " because doesn't exist.");
 			return null;
 		}
 		
@@ -66,8 +66,8 @@ implements BungeeConfigurationModel {
 	 * @param fileName   Name of file.
 	 */
 	@Override
-	public void build(String folderName, String fileName) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+	public void build(@Nonnull String folderName, @Nonnull String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		File dataFolder = plugin.getDataFolder();
 		File file;
@@ -82,13 +82,13 @@ implements BungeeConfigurationModel {
 			else inputFile = plugin.getResourceAsStream(folderName + File.separator + file);
 			
 			if (inputFile == null) {
-				logger.severe("The resource '" + fileName + "' isn't inside of plugin jar file!");
+				getInstance().getLogger().severe("The resource '" + fileName + "' isn't inside of plugin jar file!");
 				return;
 			}
 			
 			try { Files.copy(inputFile, file.toPath()); }
 			catch (IOException exception) {
-				logger.severe("Cannot create the file '" + fileName + "'.");
+				getInstance().getLogger().severe("Cannot create the file '" + fileName + "'.");
 				exception.printStackTrace();
 			}
 		}
@@ -96,7 +96,7 @@ implements BungeeConfigurationModel {
 		files.put(folderName, fileName, file);
 		try { configurations.put(fileName, folderName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file)); }
 		catch (IOException exception) {
-			logger.severe("Cannot load the file '" + fileName + "'.");
+			getInstance().getLogger().severe("Cannot load the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
 	}
@@ -109,8 +109,8 @@ implements BungeeConfigurationModel {
 	 * @param fileName   Name of file.
 	 */
 	@Override
-	public void buildCustom(String folderName, String fileName) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+	public void buildCustom(@Nonnull String folderName, @Nonnull String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		File dataFolder = plugin.getDataFolder();
 		if (!dataFolder.exists()) dataFolder.mkdir();
@@ -122,7 +122,7 @@ implements BungeeConfigurationModel {
 			if (!file.exists()) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
-					logger.severe("Cannot create the custom file '" + fileName + "'.");
+					getInstance().getLogger().severe("Cannot create the custom file '" + fileName + "'.");
 					exception.printStackTrace();
 					return;
 				}
@@ -133,7 +133,7 @@ implements BungeeConfigurationModel {
 			if (!file.exists()) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
-					logger.severe("Cannot create the custom file '" + fileName + "'.");
+					getInstance().getLogger().severe("Cannot create the custom file '" + fileName + "'.");
 					exception.printStackTrace();
 					return;
 				}
@@ -143,7 +143,7 @@ implements BungeeConfigurationModel {
 		files.put(folderName, fileName, file);
 		try { configurations.put(fileName, folderName, ConfigurationProvider.getProvider(YamlConfiguration.class).load(file)); }
 		catch (IOException exception) {
-			logger.severe("Cannot load the file '" + fileName + "'.");
+			getInstance().getLogger().severe("Cannot load the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
 	}
@@ -155,17 +155,17 @@ implements BungeeConfigurationModel {
 	 * @param fileName Name of file.
 	 */
 	@Override
-	public void delete(String folderName, String fileName) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+	public void delete(@Nonnull String folderName, @Nonnull String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!isCreated(folderName, fileName)) {
-			logger.severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
+		if (!exists(folderName, fileName)) {
+			getInstance().getLogger().severe("Cannot delete the file '" + fileName + "' because doesn't exist.");
 			return;
 		}
 		
 		try { files.get(folderName, fileName).delete(); }
 		catch (SecurityException exception) {
-			logger.severe("Cannot delete the file '" + fileName + "'.");
+			getInstance().getLogger().severe("Cannot delete the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
 		
@@ -180,17 +180,17 @@ implements BungeeConfigurationModel {
 	 * @param fileName Name of file.
 	 */
 	@Override
-	public void reload(String folderName, String fileName) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+	public void reload(@Nonnull String folderName, @Nonnull String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!isCreated(folderName, fileName)) {
-			logger.severe("Cannot reload the file '" + fileName + "' because doesn't exist.");
+		if (!exists(folderName, fileName)) {
+			getInstance().getLogger().severe("Cannot reload the file '" + fileName + "' because doesn't exist.");
 			return;
 		}
 		
 		try { ConfigurationProvider.getProvider(YamlConfiguration.class).load(files.get(folderName, fileName)); }
 		catch (IOException exception) {
-			logger.severe("Cannot reload the file '" + fileName + "'.");
+			getInstance().getLogger().severe("Cannot reload the file '" + fileName + "'.");
 			exception.printStackTrace();
 		}
 	}
@@ -202,11 +202,11 @@ implements BungeeConfigurationModel {
 	 * @param fileName Name of file.
 	 */
 	@Override
-	public void save(String folderName, String fileName) {
-		Preconditions.checkArgument(!fileName.isEmpty(), "The file name is empty.");
+	public void save(@Nonnull String folderName, @Nonnull String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		if (!isCreated(folderName, fileName)) {
-			logger.severe("Cannot save the file " + fileName + " because doesn't exist.");
+		if (!exists(folderName, fileName)) {
+			getInstance().getLogger().severe("Cannot save the file " + fileName + " because doesn't exist.");
 			return;
 		}
 		
@@ -216,7 +216,7 @@ implements BungeeConfigurationModel {
 				 files.get(folderName, fileName)
 			);
 		} catch (IOException exception) {
-			logger.severe("Failed to save the file" + fileName + ".");
+			getInstance().getLogger().severe("Failed to save the file" + fileName + ".");
 			exception.printStackTrace();
 		}
 	}
@@ -229,7 +229,7 @@ implements BungeeConfigurationModel {
 	 * @return A boolean value.
 	 */
 	@Override
-	public boolean isCreated(String folderName, String fileName) {
+	public boolean exists(@Nonnull String folderName, @Nonnull String fileName) {
 		return files.contains(folderName, fileName) && configurations.contains(folderName, fileName);
 	}
 }
