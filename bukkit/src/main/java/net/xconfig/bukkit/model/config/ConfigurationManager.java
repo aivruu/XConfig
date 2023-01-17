@@ -1,16 +1,13 @@
-package net.xconfig.bungee.models;
+package net.xconfig.bukkit.model.config;
 
-import net.md_5.bungee.config.Configuration;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * Configuration Interface for the Bungee implementations.
+ * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
  * @version 1.1.4
- * @since 1.0.1
+ * @since 1.0.0
  */
 public interface ConfigurationManager {
 	/**
@@ -20,20 +17,20 @@ public interface ConfigurationManager {
 	 * @param files Names of the files.
 	 * @see ConfigurationManager#build(String, String)
 	 */
-	default void build(@Nonnull String folderName, @Nonnull String... files) {
+	default void build(String folderName, String... files) {
 		for (String file : files) {
 			build(folderName, file);
 		}
 	}
 	
 	/**
-	 * Creates and loads multiple custom files.
+	 * Create and loads multiple custom files.
 	 *
 	 * @param folderName Name of the folder.
-	 * @param files Name of the files.
+	 * @param files Names of the files.
 	 * @see ConfigurationManager#buildCustom(String, String)
 	 */
-	default void buildCustom(@Nonnull String folderName, @Nonnull String... files) {
+	default void buildCustom(String folderName, String... files) {
 		for (String file : files) {
 			buildCustom(folderName, file);
 		}
@@ -46,62 +43,61 @@ public interface ConfigurationManager {
 	 * @param files Names of files to delete.
 	 * @see ConfigurationManager#delete(String, String)
 	 */
-	default void delete(@Nonnull String folderName, @Nonnull String... files) {
+	default void delete(String folderName, String... files) {
 		for (String file : files) {
 			delete(folderName, file);
 		}
 	}
 	
 	/**
-	 * Returns a Configuration object using the file name and their folder name (if there are a folder), if the file doesn't exist, will be
-	 * return null.
-	 *
-	 * @param fileName Name of file.
-	 * @param folderName Name of the folder.
-	 * @return A Configuration object.
-	 */
-	@Nullable Configuration file(@Nonnull String folderName, @Nonnull String fileName);
-	
-	/**
-	 * Creates and loads a new file with/without a folder.
+	 * Returns a FileConfiguration object using the file specified.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
+	 * @return A FileConfiguration.
 	 */
-	void build(@Nonnull String folderName, @Nonnull String fileName);
+	FileConfiguration file(String folderName, String fileName);
 	
 	/**
-	 * Creates an loads a new file custom with/without a folder.
+	 * Creates and load a new file with/without a folder.
+	 *
+	 * @param folderName Name of the folder.
+	 * @param fileName Name of file.
+	 */
+	void build(String folderName, String fileName);
+	
+	/**
+	 * Creates and load a new custom file with/without a folder.
 	 * This method allows create files that is not inside of plugin jar file.
 	 *
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
 	 */
-	void buildCustom(@Nonnull String folderName, @Nonnull String fileName);
+	void buildCustom(String folderName, String fileName);
 	
 	/**
 	 * Delete a file.
 	 *
-	 * @param fileName Name of file.
 	 * @param folderName Name of the folder.
+	 * @param fileName Name of file.
 	 */
-	void delete(@Nonnull String folderName, @Nonnull String fileName);
+	void delete(String folderName, String fileName);
 	
 	/**
 	 * Reloads a file.
 	 *
-	 * @param fileName Name of file.
 	 * @param folderName Name of the folder.
+	 * @param fileName Name of file.
 	 */
-	void reload(@Nonnull String folderName, @Nonnull String fileName);
+	void reload(String folderName, String fileName);
 	
 	/**
 	 * Saves an existing file.
 	 *
-	 * @param fileName Name of file.
 	 * @param folderName Name of the folder.
+	 * @param fileName Name of file.
 	 */
-	void save(@Nonnull String folderName, @Nonnull String fileName);
+	void save(String folderName, String fileName);
 	
 	/**
 	 * Returns true if the file specified exists, overwise return false.
@@ -110,5 +106,5 @@ public interface ConfigurationManager {
 	 * @param fileName Name of file.
 	 * @return A boolean value.
 	 */
-	boolean exists(@Nonnull String folderName, @Nonnull String fileName);
+	boolean exists(String folderName, String fileName);
 }
