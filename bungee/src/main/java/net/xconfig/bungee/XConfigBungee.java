@@ -1,11 +1,9 @@
 package net.xconfig.bungee;
 
 import net.md_5.bungee.api.plugin.Plugin;
-import net.xconfig.bungee.models.ConfigurationManager;
-import net.xconfig.bungee.config.SimpleConfigurationHandler;
-import net.xconfig.bungee.config.SimpleConfigurationManager;
-
-import javax.annotation.Nonnull;
+import net.xconfig.bungee.model.SimpleConfigurationHandler;
+import net.xconfig.bungee.model.SimpleConfigurationManager;
+import net.xconfig.bungee.model.config.ConfigurationManager;
 
 /**
  * Interface to get the library classes instances.
@@ -21,7 +19,7 @@ public interface XConfigBungee {
 	 * @param plugin A Plugin instance.
 	 * @return A BukkitConfigurationModelImpl instance.
 	 */
-	static SimpleConfigurationManager manager(@Nonnull Plugin plugin) {
+	static SimpleConfigurationManager newConfigurationManager(Plugin plugin) {
 		return new SimpleConfigurationManager(plugin);
 	}
 	
@@ -31,7 +29,7 @@ public interface XConfigBungee {
 	 * @param manager A BungeeConfigurationModel instance.
 	 * @return A BungeeConfigurationHandlerImpl instance.
 	 */
-	static SimpleConfigurationHandler handler(@Nonnull ConfigurationManager manager) {
+	static SimpleConfigurationHandler newConfigurationHandler(ConfigurationManager manager) {
 		return new SimpleConfigurationHandler(manager);
 	}
 }
