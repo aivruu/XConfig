@@ -1,4 +1,4 @@
-package net.xconfig.bukkit.models;
+package net.xconfig.bukkit.model.config;
 
 import org.bukkit.configuration.ConfigurationSection;
 
@@ -22,7 +22,7 @@ public interface ConfigurationHandler {
 	 * @param toPath Path for the value.
 	 * @param object Object/Value to set.
 	 */
-	void write(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String toPath, @Nonnull Object object);
+	void write(String folderName, String fileName, String toPath, Object object);
 	
 	/**
 	 * Returns a String from path requested.
@@ -33,7 +33,7 @@ public interface ConfigurationHandler {
 	 * @param colorize Do you want to apply the colors to text content?
 	 * @return A string.
 	 */
-	@Nullable String text(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean colorize);
+	String text(String folderName, String fileName, String path, boolean colorize);
 	
 	/**
 	 * Returns a String from path requested that can return a default value.
@@ -45,13 +45,7 @@ public interface ConfigurationHandler {
 	 * @param colorize Do you want to apply the colors to text content?
 	 * @return A text string.
 	 */
-	@Nonnull String text(
-		 @Nonnull String folderName,
-		 @Nonnull String fileName,
-		 @Nonnull String path,
-		 @Nonnull String defaultText,
-		 boolean colorize
-	);
+	String text(String folderName, String fileName, String path, String defaultText, boolean colorize);
 	
 	/**
 	 * Returns a number.
@@ -61,7 +55,7 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return A number
 	 */
-	int number(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	int number(String folderName, String fileName, String path);
 	
 	/**
 	 * Returns an int number or a default value.
@@ -72,7 +66,7 @@ public interface ConfigurationHandler {
 	 * @param defaultNumber Default number if the path not exist.
 	 * @return A number
 	 */
-	int number(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, int defaultNumber);
+	int number(String folderName, String fileName, String path, int defaultNumber);
 	
 	/**
 	 * Returns an object from the path.
@@ -82,7 +76,7 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return An object.
 	 */
-	@Nullable Object any(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	Object any(String folderName, String fileName, String path);
 	
 	/**
 	 * Returns an object from the path or a default value.
@@ -93,7 +87,7 @@ public interface ConfigurationHandler {
 	 * @param defaultObject Default object if the path not exist.
 	 * @return An object.
 	 */
-	@Nonnull Object any(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, @Nonnull Object defaultObject);
+	Object any(String folderName, String fileName, String path, Object defaultObject);
 	
 	/**
 	 * Returns a list.
@@ -103,7 +97,7 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return A list.
 	 */
-	@Nullable List<?> list(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	List<?> list(String folderName, String fileName, String path);
 	
 	/**
 	 * Returns a list from the path requested, or a default value if doesn't exist.
@@ -114,7 +108,7 @@ public interface ConfigurationHandler {
 	 * @param defaultList Default list if the path not exist.
 	 * @return A list.
 	 */
-	@Nonnull List<?> list(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, @Nonnull List<?> defaultList);
+	List<?> list(String folderName, String fileName, String path, List<?> defaultList);
 	
 	/**
 	 * Returns a text list.
@@ -125,7 +119,7 @@ public interface ConfigurationHandler {
 	 * @param colorize Do you want to apply the colors to text content?
 	 * @return A string list.
 	 */
-	@Nonnull List<String> textList(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean colorize);
+	List<String> textList(String folderName, String fileName, String path, boolean colorize);
 	
 	/**
 	 * Returns a boolean.
@@ -135,7 +129,7 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return A boolean value.
 	 */
-	boolean condition(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	boolean condition(String folderName, String fileName, String path);
 	
 	/**
 	 * Returns a boolean or a default value if the path doesn't exist.
@@ -146,7 +140,7 @@ public interface ConfigurationHandler {
 	 * @param defaultBoolean Default boolean value if the path not exist.
 	 * @return A boolean value.
 	 */
-	boolean condition(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, boolean defaultBoolean);
+	boolean condition(String folderName, String fileName, String path, boolean defaultBoolean);
 	
 	/**
 	 * Checks if the file contains the path.
@@ -156,7 +150,7 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return A boolean
 	 */
-	boolean contains(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	boolean contains(String folderName, String fileName, String path);
 	
 	/**
 	 * Returns a double number.
@@ -166,7 +160,7 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return A double.
 	 */
-	double doubleNumber(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	double doubleNumber(String folderName, String fileName, String path);
 	
 	/**
 	 * Returns a double number or a default value if the path doesn't exist.
@@ -177,7 +171,7 @@ public interface ConfigurationHandler {
 	 * @param defaultDoubleNumber Default double value if the path not exist.
 	 * @return A double.
 	 */
-	double doubleNumber(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path, double defaultDoubleNumber);
+	double doubleNumber(String folderName, String fileName, String path, double defaultDoubleNumber);
 	
 	/**
 	 * Returns a ConfigurationSection object.
@@ -187,5 +181,5 @@ public interface ConfigurationHandler {
 	 * @param path Path required.
 	 * @return A ConfigurationSection
 	 */
-	@Nullable ConfigurationSection configSection(@Nonnull String folderName, @Nonnull String fileName, @Nonnull String path);
+	ConfigurationSection configSection(String folderName, String fileName, String path);
 }
