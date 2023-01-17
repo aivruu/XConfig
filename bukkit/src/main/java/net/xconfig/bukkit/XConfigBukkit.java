@@ -1,8 +1,8 @@
 package net.xconfig.bukkit;
 
-import net.xconfig.bukkit.models.ConfigurationManager;
-import net.xconfig.bukkit.config.SimpleConfigurationHandler;
-import net.xconfig.bukkit.config.SimpleConfigurationManager;
+import net.xconfig.bukkit.model.SimpleConfigurationHandler;
+import net.xconfig.bukkit.model.SimpleConfigurationManager;
+import net.xconfig.bukkit.model.config.ConfigurationManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -19,7 +19,7 @@ public interface XConfigBukkit {
 	 * @param plugin A JavaPlugin instance.
 	 * @return A BukkitConfigurationModelImpl instance.
 	 */
-	static SimpleConfigurationManager manager(JavaPlugin plugin) {
+	static SimpleConfigurationManager newConfigurationManager(JavaPlugin plugin) {
 		return new SimpleConfigurationManager(plugin);
 	}
 	
@@ -29,7 +29,7 @@ public interface XConfigBukkit {
 	 * @param manager A BukkitConfigurationModel instance.
 	 * @return A BukkitConfigurationHandlerImpl instance.
 	 */
-	static SimpleConfigurationHandler handler(ConfigurationManager manager) {
+	static SimpleConfigurationHandler newConfigurationHandler(ConfigurationManager manager) {
 		return new SimpleConfigurationHandler(manager);
 	}
 }
