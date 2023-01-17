@@ -1,15 +1,13 @@
-package net.xconfig.bukkit.config;
+package net.xconfig.bukkit.model;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import net.xconfig.bukkit.models.ConfigurationManager;
+import net.xconfig.bukkit.model.config.ConfigurationManager;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
@@ -25,8 +23,7 @@ import static org.bukkit.Bukkit.getLogger;
  * @since 1.0.0
  * @see ConfigurationManager
  */
-public final class SimpleConfigurationManager
-implements ConfigurationManager {
+public class SimpleConfigurationManager implements ConfigurationManager {
 	private final JavaPlugin plugin;
 	private final Table<String, String, File> files;
 	private final Table<String, String, FileConfiguration> configurations;
@@ -37,15 +34,8 @@ implements ConfigurationManager {
 		this.configurations = HashBasedTable.create();
 	}
 	
-	/**
-	 * Returns a FileConfiguration object using the file specified.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 * @return A FileConfiguration.
-	 */
 	@Override
-	public @Nullable FileConfiguration file(@Nonnull String folderName, @Nonnull String fileName) {
+	public FileConfiguration file(String folderName, String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		if (!exists(folderName, fileName)) {
@@ -56,25 +46,17 @@ implements ConfigurationManager {
 		return configurations.get(folderName, fileName);
 	}
 	
-	/**
-	 * Creates a new file with a folder.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName   Name of file.
-	 */
 	@Override
-	public void build(@Nonnull String folderName, @Nonnull String fileName) {
+	public void build(String folderName, String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		File dataFolder = plugin.getDataFolder();
 		File file;
 		
-		boolean notFolder = folderName.isEmpty();
-		if (notFolder) file = new File(dataFolder, fileName);
-		else file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
+		if (folderName.isEmpty()) file = new File(plugin.getDataFolder(), fileName);
+		else file = new File(plugin.getDataFolder() + File.separator + folderName + File.separator, fileName);
 		
 		if (!file.exists()) {
-			if (notFolder) plugin.saveResource(fileName, false);
+			if (folderName.isEmpty()) plugin.saveResource(fileName, false);
 			else plugin.saveResource(folderName + File.separator + fileName, false);
 		}
 		
@@ -82,24 +64,16 @@ implements ConfigurationManager {
 		configurations.put(folderName, fileName, YamlConfiguration.loadConfiguration(file));
 	}
 	
-	/**
-	 * Creates and load a new custom file with/without a folder.
-	 * This method allows create files that is not inside of plugin jar file.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName   Name of file.
-	 */
 	@Override
-	public void buildCustom(@Nonnull String folderName, @Nonnull String fileName) {
+	public void buildCustom(String folderName, String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		File dataFolder = plugin.getDataFolder();
-		if (!dataFolder.exists()) dataFolder.mkdir();
+		if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdir();
 		
 		File file;
 		
 		if (folderName.isEmpty()) {
-			file = new File(dataFolder, fileName);
+			file = new File(plugin.getDataFolder(), fileName);
 			if (!file.exists()) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
@@ -109,8 +83,8 @@ implements ConfigurationManager {
 				}
 			}
 		} else {
-			new File(dataFolder, folderName).mkdir();
-			file = new File(dataFolder + File.separator + folderName + File.separator, fileName);
+			new File(plugin.getDataFolder(), folderName).mkdir();
+			file = new File(plugin.getDataFolder() + File.separator + folderName + File.separator, fileName);
 			if (!file.exists()) {
 				try { file.createNewFile(); }
 				catch (IOException exception) {
@@ -125,14 +99,8 @@ implements ConfigurationManager {
 		configurations.put(folderName, fileName, YamlConfiguration.loadConfiguration(file));
 	}
 	
-	/**
-	 * Delete a file.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 */
 	@Override
-	public void delete(@Nonnull String folderName, @Nonnull String fileName) {
+	public void delete(String folderName, String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		if (!exists(folderName, fileName)) {
@@ -150,14 +118,8 @@ implements ConfigurationManager {
 		configurations.remove(folderName, fileName);
 	}
 	
-	/**
-	 * Reloads a file.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 */
 	@Override
-	public void reload(@Nonnull String folderName, @Nonnull String fileName) {
+	public void reload(String folderName, String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		if (!exists(folderName, fileName)) {
@@ -172,14 +134,8 @@ implements ConfigurationManager {
 		}
 	}
 	
-	/**
-	 * Saves an existing file.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 */
 	@Override
-	public void save(@Nonnull String folderName, @Nonnull String fileName) {
+	public void save(String folderName, String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		if (!exists(folderName, fileName)) {
@@ -194,15 +150,8 @@ implements ConfigurationManager {
 		}
 	}
 	
-	/**
-	 * Returns true if the file specified exists, overwise return false.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName   Name of file.
-	 * @return A boolean value.
-	 */
 	@Override
-	public boolean exists(@Nonnull String folderName, @Nonnull String fileName) {
+	public boolean exists(String folderName, String fileName) {
 		return files.contains(folderName, fileName) && configurations.contains(folderName, fileName);
 	}
 }
