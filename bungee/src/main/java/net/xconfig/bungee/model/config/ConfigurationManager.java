@@ -2,110 +2,120 @@ package net.xconfig.bungee.model.config;
 
 import net.md_5.bungee.config.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Configuration Interface for the Bungee implementations.
  *
  * @author InitSync
- * @version 1.1.4
+ * @version 1.1.5
  * @since 1.0.1
  */
 public interface ConfigurationManager {
 	/**
-	 * Creates and loads multiple files.
+	 * Returns multiple Configuration objects at a list.
 	 *
-	 * @param folderName Name of the folder.
-	 * @param files Names of the files.
-	 * @see ConfigurationManager#build(String, String)
+	 * @param files Files to get.
+	 * @return A List with the Configuration objects requested.
+	 * @see ConfigurationManager#get(String)
 	 */
-	default void build(String folderName, String... files) {
-		for (String file : files) {
-			build(folderName, file);
+	default List<Configuration> get(String... files) {
+		final List<Configuration> cachedConfigurationFiles = new ArrayList<>();
+		
+		for (String fileRequested : files) {
+			cachedConfigurationFiles.add(get(fileRequested));
 		}
+		
+		return cachedConfigurationFiles;
 	}
 	
 	/**
-	 * Creates and loads multiple custom files.
+	 * Creates and loads multiple files or custom files.
 	 *
 	 * @param folderName Name of the folder.
-	 * @param files Name of the files.
-	 * @see ConfigurationManager#buildCustom(String, String)
+	 * @param custom The files to create will be custom?
+	 * @param files Names of the files.
+	 * @see ConfigurationManager#build(String, boolean, String...)
 	 */
-	default void buildCustom(String folderName, String... files) {
+	default void build(String folderName, boolean custom, String... files) {
 		for (String file : files) {
-			buildCustom(folderName, file);
+			build(folderName, file, custom);
 		}
 	}
 	
 	/**
 	 * Delete one or more files.
 	 *
-	 * @param folderName Name of the folder.
-	 * @param files Names of files to delete.
-	 * @see ConfigurationManager#delete(String, String)
+	 * @param files Files to delete.
+	 * @see ConfigurationManager#delete(String)
 	 */
-	default void delete(String folderName, String... files) {
+	default void delete(String... files) {
 		for (String file : files) {
-			delete(folderName, file);
+			delete(file);
 		}
 	}
 	
 	/**
-	 * Returns a Configuration object using the file name and their folder name (if there are a folder), if the file doesn't exist, will be
-	 * return null.
+	 * Reload one or more configuration files.
 	 *
-	 * @param fileName Name of file.
-	 * @param folderName Name of the folder.
-	 * @return A Configuration object.
+	 * @param files Files to reload.
+	 * @see ConfigurationManager#reload(String)
 	 */
-	Configuration file(String folderName, String fileName);
+	default void reload(String... files) {
+		for (String file : files) {
+			reload(file);
+		}
+	}
 	
 	/**
-	 * Creates and loads a new file with/without a folder.
+	 * Saves multiple configuration files.
 	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
+	 * @param files Files to save.
+	 * @see ConfigurationManager#save(String)
 	 */
-	void build(String folderName, String fileName);
+	default void save(String... files) {
+		for (String file : files) {
+			save(file);
+		}
+	}
 	
 	/**
-	 * Creates an loads a new file custom with/without a folder.
-	 * This method allows create files that is not inside of plugin jar file.
+	 * Returns a Configuration object using the file specified.
+	 *
+	 * @param fileName Name of file.
+	 * @return A FileConfiguration object for that file.
+	 */
+	Configuration get(String fileName);
+	
+	/**
+	 * Creates and load a custom/normal file with/without a folder.
+	 * <p>
+	 * This method allows creates files that is not inside of plugin jar file or make normal configuration files..
 	 *
 	 * @param folderName Name of the folder.
 	 * @param fileName Name of file.
 	 */
-	void buildCustom(String folderName, String fileName);
+	void build(String folderName, String fileName, boolean custom);
 	
 	/**
 	 * Delete a file.
 	 *
 	 * @param fileName Name of file.
-	 * @param folderName Name of the folder.
 	 */
-	void delete(String folderName, String fileName);
+	void delete(String fileName);
 	
 	/**
 	 * Reloads a file.
 	 *
 	 * @param fileName Name of file.
-	 * @param folderName Name of the folder.
 	 */
-	void reload(String folderName, String fileName);
+	void reload(String fileName);
 	
 	/**
 	 * Saves an existing file.
 	 *
 	 * @param fileName Name of file.
-	 * @param folderName Name of the folder.
 	 */
-	void save(String folderName, String fileName);
-	
-	/**
-	 * Returns true if the file specified exists, overwise return false.
-	 *
-	 * @param folderName Name of the folder.
-	 * @param fileName Name of file.
-	 * @return A boolean value.
-	 */
-	boolean exists(String folderName, String fileName);
+	void save(String fileName);
 }
