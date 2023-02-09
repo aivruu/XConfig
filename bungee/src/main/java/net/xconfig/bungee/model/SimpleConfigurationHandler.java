@@ -15,7 +15,7 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * Implementation to handle the values from the configuration on BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.4
+ * @version 1.1.5
  * @since 1.0.1
  */
 public final class SimpleConfigurationHandler implements ConfigurationHandler {
@@ -26,22 +26,22 @@ public final class SimpleConfigurationHandler implements ConfigurationHandler {
 	}
 	
 	@Override
-	public void write(String folderName, String fileName, String path, Object object) {
+	public void write(String fileName, String path, Object value) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path for the value is empty.");
-		checkNotNull(object, "The object to set can't be null.");
+		checkNotNull(value, "The value to set can't be null.");
 		
-		configuration.file(folderName, fileName).set(path, object);
+		configuration.get(fileName).set(path, value);
 	}
 	
 	@Override
-	public String text(String folderName, String fileName, String path, boolean colorize) {
+	public String text(String fileName, String path, boolean colorize) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		String text = configuration.file(folderName, fileName).getString(path);
+		final String text = configuration.get(fileName).getString(path);
 		if (text == null) {
-			getInstance().getLogger().severe("Cannot get the text from the path of file '" + fileName + "' because doesn't exist.");
+			getInstance().getLogger().severe("Cannot get the String value because that path doesn't exist!");
 			return null;
 		}
 		
@@ -49,38 +49,38 @@ public final class SimpleConfigurationHandler implements ConfigurationHandler {
 	}
 	
 	@Override
-	public String text(String folderName, String fileName, String path, String defaultText, boolean colorize) {
+	public String text(String fileName, String path, String defaultText, boolean colorize) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		String text = configuration.file(folderName, fileName).getString(path, defaultText);
+		final String text = configuration.get(fileName).getString(path, defaultText);
 		return colorize ? TextUtils.colorize(text) : text;
 	}
 	
 	@Override
-	public int number(String folderName, String fileName, String path) {
+	public int number(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getInt(path);
+		return configuration.get(fileName).getInt(path);
 	}
 	
 	@Override
-	public int number(String folderName, String fileName, String path, int defaultNumber) {
+	public int number(String fileName, String path, int defaultNumber) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getInt(path, defaultNumber);
+		return configuration.get(fileName).getInt(path, defaultNumber);
 	}
 	
 	@Override
-	public Object any(String folderName, String fileName, String path) {
+	public Object any(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		Object object = configuration.file(folderName, fileName).get(path);
+		final Object object = configuration.get(fileName).get(path);
 		if (object == null) {
-			getInstance().getLogger().severe("Cannot get the object from the path of file '" + fileName + "' because doesn't exist.");
+			getInstance().getLogger().severe("Cannot get the Object value because that path doesn't exist!");
 			return null;
 		}
 		
@@ -88,93 +88,99 @@ public final class SimpleConfigurationHandler implements ConfigurationHandler {
 	}
 	
 	@Override
-	public Object any(String folderName, String fileName, String path, Object defaultObject) {
+	public Object any(String fileName, String path, Object defaultObject) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		checkNotNull(defaultObject, "The default object to return can't be null.");
 		
-		return configuration.file(folderName, fileName).get(path, defaultObject);
+		return configuration.get(fileName).get(path, defaultObject);
 	}
 	
 	@Override
-	public List<?> list(String folderName, String fileName, String path) {
+	public List<?> list(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getList(path);
+		final List<?> list = configuration.get(fileName).getList(path);
+		if (list == null) {
+			getInstance().getLogger().severe("Cannot get the List value because that path doesn't exist!");
+			return null;
+		}
+		
+		return list;
 	}
 	
 	@Override
-	public List<?> list(String folderName, String fileName, String path, List<?> defaultList) {
+	public List<?> list(String fileName, String path, List<?> defaultList) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
-		checkNotNull(defaultList, "The default List object can't be null.");
+		checkNotNull(defaultList, "The default List object to return can't be null.");
 		
-		return configuration.file(folderName, fileName).getList(path, defaultList);
+		return configuration.get(fileName).getList(path, defaultList);
 	}
 	
 	@Override
-	public List<String> textList(String folderName, String fileName, String path, boolean colorize) {
+	public List<String> textList(String fileName, String path, boolean colorize) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		List<String> stringList = configuration.file(folderName, fileName).getStringList(path);
- 		return colorize ? TextUtils.colorize(stringList) : stringList;
+		final List<String> stringList = configuration.get(fileName).getStringList(path);
+		return colorize ? TextUtils.colorize(stringList) : stringList;
 	}
 	
 	@Override
-	public boolean condition(String folderName, String fileName, String path) {
+	public boolean condition(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getBoolean(path);
+		return configuration.get(fileName).getBoolean(path);
 	}
 	
 	@Override
-	public boolean condition(String folderName, String fileName, String path, boolean defaultBoolean) {
+	public boolean condition(String fileName, String path, boolean defaultBoolean) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getBoolean(path, defaultBoolean);
+		return configuration.get(fileName).getBoolean(path, defaultBoolean);
 	}
 	
 	@Override
-	public boolean contains(String folderName, String fileName, String path) {
+	public boolean contains(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).contains(path);
+		return configuration.get(fileName).contains(path);
 	}
 	
 	@Override
-	public double doubleNumber(String folderName, String fileName, String path) {
+	public double doubleNumber(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getDouble(path);
+		return configuration.get(fileName).getDouble(path);
 	}
 	
 	@Override
-	public double doubleNumber(String folderName, String fileName, String path, double defaultDoubleNumber) {
+	public double doubleNumber(String fileName, String path, double defaultDoubleNumber) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getDouble(path, defaultDoubleNumber);
+		return configuration.get(fileName).getDouble(path, defaultDoubleNumber);
 	}
 	
 	@Override
-	public char character(String folderName, String fileName, String path) {
+	public char character(String fileName, String path) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getChar(path);
+		return configuration.get(fileName).getChar(path);
 	}
 	
 	@Override
-	public char character(String folderName, String fileName, String path, char defaultChar) {
+	public char character(String fileName, String path, char defaultChar) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		checkArgument(!path.isEmpty(), "The path is empty.");
 		
-		return configuration.file(folderName, fileName).getChar(path, defaultChar);
+		return configuration.get(fileName).getChar(path, defaultChar);
 	}
 }
