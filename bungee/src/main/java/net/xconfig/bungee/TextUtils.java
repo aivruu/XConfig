@@ -1,6 +1,7 @@
 package net.xconfig.bungee;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -11,12 +12,14 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.4
+ * @version 1.1.5
  * @since 1.0.5
  */
 public final class TextUtils {
 	private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}}");
 	private static final StringBuilder BUILDER = new StringBuilder();
+	@SuppressWarnings("deprecation")
+	private static final int PROTOCOL = ProxyServer.getInstance().getProtocolVersion();
 	
 	private TextUtils() {}
 	
@@ -30,8 +33,8 @@ public final class TextUtils {
 	public static boolean containsIgnoreCase(String target, String search) {
 		if (target == null || search == null) return false;
 		
-		int length = search.length();
-		int max = target.length() - length;
+		final int length = search.length();
+		final int max = target.length() - length;
 		
 		for (int i = 0 ; i < max ; i++) {
 			if (target.regionMatches(true, i, search, 0, length)) return true;
@@ -64,7 +67,9 @@ public final class TextUtils {
 	 * @return Text colorized.
 	 */
 	public static String colorize(String text) {
-		String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
+		if (PROTOCOL < 735) return ChatColor.translateAlternateColorCodes('&', text);
+		
+		final String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
 		Matcher matcher = HEX_PATTERN.matcher(text);
 		
 		if (!text.contains("&#")) {

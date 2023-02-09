@@ -12,12 +12,15 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at Bukkit (Spigot/Paper) platforms.
  *
  * @author InitSync
- * @version 1.1.4
+ * @version 1.1.5
  * @since 1.0.5
  */
 public class TextUtils {
 	private static final Pattern HEX_PATTERN = Pattern.compile("#[a-fA-F0-9]{6}}");
 	private static final StringBuilder BUILDER = new StringBuilder();
+	private static final int VERSION = Integer.parseInt(Bukkit.getBukkitVersion()
+		 .split("-")[0]
+		 .split("\\.")[1]);
 	
 	private TextUtils() {}
 	
@@ -31,13 +34,13 @@ public class TextUtils {
 	public static boolean containsIgnoreCase(String target, String search) {
 		if (target == null || search == null) return false;
 		
-		int length = search.length();
-		int max = target.length() - length;
+		final int length = search.length();
+		final int max = target.length() - length;
 		
 		for (int i = 0 ; i < max ; i++) {
 			if (target.regionMatches(true, i, search, 0, length)) return true;
 		}
-		
+
 		return false;
 	}
 	
@@ -65,13 +68,9 @@ public class TextUtils {
 	 * @return The text colorized.
 	 */
 	public static String colorize(String text) {
-		if (Integer.parseInt(Bukkit.getBukkitVersion()
-			 .split("-")[0]
-			 .split("\\.")[1]) > 16) {
-			return ChatColor.translateAlternateColorCodes('&', text);
-		}
+		if (VERSION < 16) return ChatColor.translateAlternateColorCodes('&', text);
 		
-		String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
+		final String[] parts = text.split(String.format("((?<=%1$s)|(?=%1$s))", "&"));
 		Matcher matcher = HEX_PATTERN.matcher(text);
 		
 		if (!text.contains("&#")) {
