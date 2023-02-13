@@ -18,7 +18,7 @@ import static org.bukkit.Bukkit.getLogger;
  * Class that handles internally the file creation.
  *
  * @author InitSync
- * @version 1.1.5
+ * @version 1.1.6
  * @since 1.0.0
  * @see ConfigurationManager
  */

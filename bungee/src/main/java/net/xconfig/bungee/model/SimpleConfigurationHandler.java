@@ -15,7 +15,7 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * Implementation to handle the values from the configuration on BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.5
+ * @version 1.1.6
  * @since 1.0.1
  */
 public final class SimpleConfigurationHandler implements ConfigurationHandler {

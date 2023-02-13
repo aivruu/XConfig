@@ -17,7 +17,7 @@ import static org.bukkit.Bukkit.getLogger;
  * Class to handle the configuration files and get values from that files.
  *
  * @author InitSync
- * @version 1.1.5
+ * @version 1.1.6
  * @since 1.0.0
  * @see ConfigurationHandler
  */

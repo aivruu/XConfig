@@ -10,7 +10,7 @@ import java.util.List;
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.1.5
+ * @version 1.1.6
  * @since 1.0.0
  */
 public interface ConfigurationManager {

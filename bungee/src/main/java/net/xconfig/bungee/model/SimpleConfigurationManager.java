@@ -20,7 +20,7 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.1.5
+ * @version 1.1.6
  * @since 1.0.1
  * @see ConfigurationManager
  */
