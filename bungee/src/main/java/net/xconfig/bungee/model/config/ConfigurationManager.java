@@ -1,6 +1,7 @@
 package net.xconfig.bungee.model.config;
 
 import net.md_5.bungee.config.Configuration;
+import net.xconfig.bungee.model.objects.YamlFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,22 @@ public interface ConfigurationManager {
 		}
 		
 		return cachedConfigurationFiles;
+	}
+	
+	/**
+	 * Returns a list of YamlFile objects requested.
+	 *
+	 * @param files Name of the files.
+	 * @return A List with the YamlFile objects from requested files.
+	 */
+	default List<YamlFile> getYaml(String... files) {
+		final List<YamlFile> cachedYamlFiles = new ArrayList<>();
+		
+		for (String requestedFile : files) {
+			cachedYamlFiles.add(getYaml(requestedFile));
+		}
+		
+		return cachedYamlFiles;
 	}
 	
 	/**
@@ -87,6 +104,14 @@ public interface ConfigurationManager {
 	 * @return A FileConfiguration object for that file.
 	 */
 	Configuration get(String fileName);
+	
+	/**
+	 * Returns the YamlFile object from file requested.
+	 *
+	 * @param fileName Name of file.
+	 * @return The YamlFile object for these file.
+	 */
+	YamlFile getYaml(String fileName);
 	
 	/**
 	 * Creates and load a custom/normal file with/without a folder.

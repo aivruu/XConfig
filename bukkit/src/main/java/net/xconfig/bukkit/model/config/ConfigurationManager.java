@@ -1,5 +1,6 @@
 package net.xconfig.bukkit.model.config;
 
+import net.xconfig.bukkit.model.objects.YamlFile;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
@@ -23,11 +24,27 @@ public interface ConfigurationManager {
 	default List<FileConfiguration> get(String... files) {
 		final List<FileConfiguration> cachedConfigurationFiles = new ArrayList<>();
 		
-		for (String fileRequested : files) {
-			cachedConfigurationFiles.add(get(fileRequested));
+		for (String requestedFile : files) {
+			cachedConfigurationFiles.add(get(requestedFile));
 		}
 		
 		return cachedConfigurationFiles;
+	}
+	
+	/**
+	 * Returns a list of YamlFile objects requested.
+	 *
+	 * @param files Name of the files.
+	 * @return A List with the YamlFile objects from requested files.
+	 */
+	default List<YamlFile> getYaml(String... files) {
+		final List<YamlFile> cachedYamlFiles = new ArrayList<>();
+		
+		for (String requestedFile : files) {
+			cachedYamlFiles.add(getYaml(requestedFile));
+		}
+		
+		return cachedYamlFiles;
 	}
 	
 	/**
@@ -87,6 +104,14 @@ public interface ConfigurationManager {
 	 * @return A FileConfiguration object for that file.
 	 */
 	FileConfiguration get(String fileName);
+	
+	/**
+	 * Returns the YamlFile object from file requested.
+	 *
+	 * @param fileName Name of file.
+	 * @return The YamlFile object for these file.
+	 */
+	YamlFile getYaml(String fileName);
 	
 	/**
 	 * Creates and load a custom/normal file with/without a folder.
