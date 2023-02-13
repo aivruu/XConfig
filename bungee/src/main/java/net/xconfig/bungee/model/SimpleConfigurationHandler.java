@@ -19,10 +19,39 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * @since 1.0.1
  */
 public final class SimpleConfigurationHandler implements ConfigurationHandler {
+	private static SimpleConfigurationHandler instance;
+	
 	private final ConfigurationManager configuration;
 	
-	public SimpleConfigurationHandler(ConfigurationManager configuration) {
-		this.configuration = Objects.requireNonNull(configuration, "The ConfigurationModel is null.");
+	private SimpleConfigurationHandler(ConfigurationManager configuration) {
+		this.configuration = configuration;
+	}
+	
+	/**
+	 * Register a provider for these instance.
+	 *
+	 * @param manager ConfigurationManager object required for operate the handler.
+	 */
+	public static SimpleConfigurationHandler register(ConfigurationManager manager) {
+		checkNotNull(manager, "The ConfigurationManager object cannot be null.");
+		
+		return instance = new SimpleConfigurationHandler(manager);
+	}
+	
+	/**
+	 * Returns a SimpleConfigurationHandler instance.
+	 *
+	 * @return The SimpleConfigurationHandler instance or null if there are no a provider registered.
+	 */
+	public static SimpleConfigurationHandler get() {
+		return instance;
+	}
+	
+	/**
+	 * Unregister the provider for these instance.
+	 */
+	public static SimpleConfigurationHandler unregister() {
+		return instance = null;
 	}
 	
 	@Override

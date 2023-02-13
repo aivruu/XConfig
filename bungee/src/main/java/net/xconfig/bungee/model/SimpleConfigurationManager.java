@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static net.md_5.bungee.api.ProxyServer.getInstance;
 
 /**
@@ -24,12 +25,41 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * @see ConfigurationManager
  */
 public final class SimpleConfigurationManager implements ConfigurationManager {
+	private static SimpleConfigurationManager instance;
+	
 	private final Plugin plugin;
 	private final Map<String, YamlFile> cachedFiles;
 	
-	public SimpleConfigurationManager(Plugin plugin) {
-		this.plugin = Objects.requireNonNull(plugin, "The Plugin instance is null.");
-		this.cachedFiles = new HashMap<>();
+	private SimpleConfigurationManager(Plugin plugin) {
+		this.plugin = plugin;
+		cachedFiles = new HashMap<>();
+	}
+	
+	/**
+	 * Register a provider for these instance.
+	 *
+	 * @param plugin A JavaPlugin instance provider.
+	 */
+	public static SimpleConfigurationManager register(Plugin plugin) {
+		checkNotNull(plugin, "The Plugin instance cannot be null.");
+		
+		return instance = new SimpleConfigurationManager(plugin);
+	}
+	
+	/**
+	 * Returns a SimpleConfigurationHandler instance.
+	 *
+	 * @return The SimpleConfigurationHandler instance or null if there are no a provider registered.
+	 */
+	public static SimpleConfigurationManager get() {
+		return instance;
+	}
+	
+	/**
+	 * Unregister the provider for these instance.
+	 */
+	public static SimpleConfigurationManager unregister() {
+		return instance = null;
 	}
 	
 	@Override
@@ -43,6 +73,13 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 		}
 		
 		return file.get();
+	}
+	
+	@Override
+	public YamlFile getYaml(String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		
+		return cachedFiles.getOrDefault(fileName, null);
 	}
 	
 	@Override

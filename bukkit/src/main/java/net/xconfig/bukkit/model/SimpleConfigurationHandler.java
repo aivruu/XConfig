@@ -4,6 +4,7 @@ import net.xconfig.bukkit.TextUtils;
 import net.xconfig.bukkit.model.config.ConfigurationHandler;
 import net.xconfig.bukkit.model.config.ConfigurationManager;
 import org.bukkit.configuration.ConfigurationSection;
+import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +22,39 @@ import static org.bukkit.Bukkit.getLogger;
  * @see ConfigurationHandler
  */
 public class SimpleConfigurationHandler implements ConfigurationHandler {
+	private static SimpleConfigurationHandler instance;
+	
 	private final ConfigurationManager configuration;
 	
-	public SimpleConfigurationHandler(ConfigurationManager configuration) {
-		this.configuration = Objects.requireNonNull(configuration, "The BukkitConfigurationModel object is null.");
+	private SimpleConfigurationHandler(ConfigurationManager configuration) {
+		this.configuration = configuration;
+	}
+	
+	/**
+	 * Register a provider for these instance.
+	 *
+	 * @param manager ConfigurationManager object required for operate the handler.
+	 */
+	public static SimpleConfigurationHandler register(ConfigurationManager manager) {
+		checkNotNull(manager, "The ConfigurationManager object cannot be null.");
+		
+		return instance = new SimpleConfigurationHandler(manager);
+	}
+	
+	/**
+	 * Returns a SimpleConfigurationHandler instance.
+	 *
+	 * @return The SimpleConfigurationHandler instance or null if there are no a provider registered.
+	 */
+	public static SimpleConfigurationHandler get() {
+		return instance;
+	}
+	
+	/**
+	 * Unregister the provider for these instance.
+	 */
+	public static SimpleConfigurationHandler unregister() {
+		return instance = null;
 	}
 	
 	@Override

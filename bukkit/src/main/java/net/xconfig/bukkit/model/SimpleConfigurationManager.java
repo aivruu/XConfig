@@ -9,9 +9,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.bukkit.Bukkit.getLogger;
 
 /**
@@ -23,12 +23,41 @@ import static org.bukkit.Bukkit.getLogger;
  * @see ConfigurationManager
  */
 public class SimpleConfigurationManager implements ConfigurationManager {
+	private static SimpleConfigurationManager instance;
+	
 	private final JavaPlugin plugin;
 	private final Map<String, YamlFile> cachedFiles;
 	
-	public SimpleConfigurationManager(JavaPlugin plugin) {
-		this.plugin = Objects.requireNonNull(plugin, "The plugin instance is null.");
+	private SimpleConfigurationManager(JavaPlugin plugin) {
+		this.plugin = plugin;
 		cachedFiles = new HashMap<>();
+	}
+	
+	/**
+	 * Register a provider for these instance.
+	 *
+	 * @param plugin A JavaPlugin instance provider.
+	 */
+	public static SimpleConfigurationManager register(JavaPlugin plugin) {
+		checkNotNull(plugin, "The JavaPlugin instance cannot be null.");
+		
+		return instance = new SimpleConfigurationManager(plugin);
+	}
+	
+	/**
+	 * Returns a SimpleConfigurationHandler instance.
+	 *
+	 * @return The SimpleConfigurationHandler instance or null if there are no a provider registered.
+	 */
+	public static SimpleConfigurationManager get() {
+		return instance;
+	}
+	
+	/**
+	 * Unregister the provider for these instance.
+	 */
+	public static SimpleConfigurationManager unregister() {
+		return instance = null;
 	}
 	
 	@Override
@@ -42,6 +71,13 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 		}
 		
 		return file.get();
+	}
+	
+	@Override
+	public YamlFile getYaml(String fileName) {
+		checkArgument(!fileName.isEmpty(), "The file name is empty.");
+		
+		return cachedFiles.getOrDefault(fileName, null);
 	}
 	
 	@Override
