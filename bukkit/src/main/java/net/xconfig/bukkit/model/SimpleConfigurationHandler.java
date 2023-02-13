@@ -4,7 +4,6 @@ import net.xconfig.bukkit.TextUtils;
 import net.xconfig.bukkit.model.config.ConfigurationHandler;
 import net.xconfig.bukkit.model.config.ConfigurationManager;
 import org.bukkit.configuration.ConfigurationSection;
-import sun.java2d.pipe.SpanShapeRenderer;
 
 import java.util.List;
 import java.util.Objects;
