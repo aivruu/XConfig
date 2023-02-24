@@ -117,7 +117,7 @@ public class YamlFile {
 	 *
 	 * @return The folder name, if isn't established will return null.
 	 */
-	public String getFolderName() {
+	public String folderName() {
 		return folderName;
 	}
 	
@@ -126,7 +126,7 @@ public class YamlFile {
 	 *
 	 * @return The file name.
 	 */
-	public String getFileName() {
+	public String fileName() {
 		return fileName;
 	}
 	
