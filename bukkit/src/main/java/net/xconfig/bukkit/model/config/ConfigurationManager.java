@@ -10,7 +10,7 @@ import java.util.List;
  * Interface model for the Bukkit Configuration Manager.
  *
  * @author InitSync
- * @version 1.1.6
+ * @version 1.1.7
  * @since 1.0.0
  */
 public interface ConfigurationManager {
@@ -37,11 +37,11 @@ public interface ConfigurationManager {
 	 * @param files Name of the files.
 	 * @return A List with the YamlFile objects from requested files.
 	 */
-	default List<YamlFile> getYaml(String... files) {
+	default List<YamlFile> files(String... files) {
 		final List<YamlFile> cachedYamlFiles = new ArrayList<>();
 		
 		for (String requestedFile : files) {
-			cachedYamlFiles.add(getYaml(requestedFile));
+			cachedYamlFiles.add(file(requestedFile));
 		}
 		
 		return cachedYamlFiles;
@@ -111,7 +111,7 @@ public interface ConfigurationManager {
 	 * @param fileName Name of file.
 	 * @return The YamlFile object for these file.
 	 */
-	YamlFile getYaml(String fileName);
+	YamlFile file(String fileName);
 	
 	/**
 	 * Creates and load a custom/normal file with/without a folder.
