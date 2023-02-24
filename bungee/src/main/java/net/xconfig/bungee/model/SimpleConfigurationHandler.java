@@ -5,7 +5,6 @@ import net.xconfig.bungee.model.config.ConfigurationHandler;
 import net.xconfig.bungee.model.config.ConfigurationManager;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,7 +14,7 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * Implementation to handle the values from the configuration on BungeeCord platforms.
  *
  * @author InitSync
- * @version 1.1.6
+ * @version 1.1.7
  * @since 1.0.1
  */
 public final class SimpleConfigurationHandler implements ConfigurationHandler {
@@ -32,10 +31,10 @@ public final class SimpleConfigurationHandler implements ConfigurationHandler {
 	 *
 	 * @param manager ConfigurationManager object required for operate the handler.
 	 */
-	public static SimpleConfigurationHandler register(ConfigurationManager manager) {
+	public static void register(ConfigurationManager manager) {
 		checkNotNull(manager, "The ConfigurationManager object cannot be null.");
 		
-		return instance = new SimpleConfigurationHandler(manager);
+		instance = new SimpleConfigurationHandler(manager);
 	}
 	
 	/**
@@ -50,8 +49,8 @@ public final class SimpleConfigurationHandler implements ConfigurationHandler {
 	/**
 	 * Unregister the provider for these instance.
 	 */
-	public static SimpleConfigurationHandler unregister() {
-		return instance = null;
+	public static void unregister() {
+		instance = null;
 	}
 	
 	@Override
