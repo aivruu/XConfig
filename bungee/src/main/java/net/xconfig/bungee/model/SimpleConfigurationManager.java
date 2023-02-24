@@ -10,7 +10,6 @@ import net.xconfig.bungee.model.objects.YamlFile;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -20,7 +19,7 @@ import static net.md_5.bungee.api.ProxyServer.getInstance;
  * Implementation that manages the creation of the files.
  *
  * @author InitSync
- * @version 1.1.6
+ * @version 1.1.7
  * @since 1.0.1
  * @see ConfigurationManager
  */
@@ -40,10 +39,10 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 	 *
 	 * @param plugin A JavaPlugin instance provider.
 	 */
-	public static SimpleConfigurationManager register(Plugin plugin) {
+	public static void register(Plugin plugin) {
 		checkNotNull(plugin, "The Plugin instance cannot be null.");
 		
-		return instance = new SimpleConfigurationManager(plugin);
+		instance = new SimpleConfigurationManager(plugin);
 	}
 	
 	/**
@@ -58,8 +57,8 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 	/**
 	 * Unregister the provider for these instance.
 	 */
-	public static SimpleConfigurationManager unregister() {
-		return instance = null;
+	public static void unregister() {
+		instance = null;
 	}
 	
 	@Override
@@ -76,7 +75,7 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 	}
 	
 	@Override
-	public YamlFile getYaml(String fileName) {
+	public YamlFile file(String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		return cachedFiles.getOrDefault(fileName, null);
@@ -86,11 +85,8 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 	public void build(String folderName, String fileName, boolean custom) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		final YamlFile file = cachedFiles.put(fileName, new YamlFile(plugin, folderName, fileName));
-		if (file == null || !file.file().exists()) {
-			getInstance().getLogger().severe("Cannot create the file " + fileName + "!");
-			return;
-		}
+		final YamlFile file = new YamlFile(plugin, folderName, fileName);
+		cachedFiles.put(fileName, file);
 		
 		if (custom) {
 			file.createAsCustom();
@@ -104,7 +100,7 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 	public void delete(String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		YamlFile file = cachedFiles.remove(fileName);
+		YamlFile file = cachedFiles.get(fileName);
 		if (file == null || !file.file().exists()) {
 			getInstance().getLogger().severe("Cannot delete the file '" + fileName + "' because already doesn't exist.");
 			return;
@@ -116,6 +112,7 @@ public final class SimpleConfigurationManager implements ConfigurationManager {
 			exception.printStackTrace();
 		}
 		
+		cachedFiles.remove(file.fileName());
 		file = null;
 	}
 	

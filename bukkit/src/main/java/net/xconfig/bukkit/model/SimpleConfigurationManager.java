@@ -18,7 +18,7 @@ import static org.bukkit.Bukkit.getLogger;
  * Class that handles internally the file creation.
  *
  * @author InitSync
- * @version 1.1.6
+ * @version 1.1.7
  * @since 1.0.0
  * @see ConfigurationManager
  */
@@ -38,10 +38,10 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 	 *
 	 * @param plugin A JavaPlugin instance provider.
 	 */
-	public static SimpleConfigurationManager register(JavaPlugin plugin) {
+	public static void register(JavaPlugin plugin) {
 		checkNotNull(plugin, "The JavaPlugin instance cannot be null.");
 		
-		return instance = new SimpleConfigurationManager(plugin);
+		instance = new SimpleConfigurationManager(plugin);
 	}
 	
 	/**
@@ -56,8 +56,8 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 	/**
 	 * Unregister the provider for these instance.
 	 */
-	public static SimpleConfigurationManager unregister() {
-		return instance = null;
+	public static void unregister() {
+		instance = null;
 	}
 	
 	@Override
@@ -74,7 +74,7 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 	}
 	
 	@Override
-	public YamlFile getYaml(String fileName) {
+	public YamlFile file(String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
 		return cachedFiles.getOrDefault(fileName, null);
@@ -84,12 +84,9 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 	public void build(String folderName, String fileName, boolean custom) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		final YamlFile file = cachedFiles.put(fileName, new YamlFile(plugin, folderName, fileName));
-		if (file == null) {
-			getLogger().severe("Cannot create the file " + fileName + "!");
-			return;
-		}
-		
+		final YamlFile file = new YamlFile(plugin, folderName, fileName);
+		cachedFiles.put(fileName, file);
+
 		if (custom) {
 			file.createAsCustom();
 			return;
@@ -102,7 +99,7 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 	public void delete(String fileName) {
 		checkArgument(!fileName.isEmpty(), "The file name is empty.");
 		
-		YamlFile file = cachedFiles.remove(fileName);
+		YamlFile file = cachedFiles.get(fileName);
 		if (file == null || !file.file().exists()) {
 			getLogger().severe("Cannot delete the file " + fileName + " because already doesn't exist.");
 			return;
@@ -114,6 +111,7 @@ public class SimpleConfigurationManager implements ConfigurationManager {
 			exception.printStackTrace();
 		}
 		
+		cachedFiles.remove(file.fileName());
 		file = null;
 	}
 	
