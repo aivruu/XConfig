@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * Utility class to colorize strings at Bukkit (Spigot/Paper) platforms.
  *
  * @author InitSync
- * @version 1.1.6
+ * @version 1.1.7
  * @since 1.0.5
  */
 public class TextUtils {
@@ -32,7 +32,7 @@ public class TextUtils {
 	 * @return True if the sequence was found, else return false.
 	 */
 	public static boolean containsIgnoreCase(String target, String search) {
-		if (target == null || search == null) return false;
+		if ((target == null) || search == null) return false;
 		
 		final int length = search.length();
 		final int max = target.length() - length;

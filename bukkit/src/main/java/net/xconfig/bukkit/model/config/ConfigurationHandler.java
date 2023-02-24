@@ -8,7 +8,7 @@ import java.util.List;
  * Interface model that handles the configuration handler for Bukkit.
  *
  * @author InitSync
- * @version 1.1.6
+ * @version 1.1.7
  * @since 1.0.0
  */
 public interface ConfigurationHandler {
